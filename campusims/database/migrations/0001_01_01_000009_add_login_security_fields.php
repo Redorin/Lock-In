@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        // Only add login tracking columns — password_reset_tokens already
+        // exists from Laravel's default migrations
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('login_attempts')->default(0)->after('is_active');
+            $table->timestamp('locked_until')->nullable()->after('login_attempts');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['login_attempts', 'locked_until']);
+        });
+    }
+};
