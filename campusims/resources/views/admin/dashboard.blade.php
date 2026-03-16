@@ -2,57 +2,43 @@
 @section('title','Dashboard')
 @section('page-title','Dashboard')
 @section('page-sub','Overview of campus spaces and users')
-
 @section('styles')
 <style>
-    .stats-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 20px; }
-    .stat-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 20px; backdrop-filter: blur(16px); }
-    .stat-label { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
-    .stat-value { font-size: 1.8rem; font-weight: 800; letter-spacing: -.5px; }
-    .c-purple { color: var(--accent2); }
-    .c-green  { color: var(--accent); }
-    .c-yellow { color: var(--accent3); }
-    .c-red    { color: var(--danger); }
-    .c-blue   { color: #60a5fa; }
+.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+.sc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
+.sl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.sv{font-size:1.8rem;font-weight:800;letter-spacing:-.5px;}
+.cb{color:var(--accent2);}.cp{color:var(--accent3);}.cw{color:rgba(255,255,255,.85);}.cy{color:var(--warn);}.cr{color:var(--danger);}
+@media(max-width:600px){.sg{grid-template-columns:repeat(3,1fr);}.sc{padding:14px 10px;}.sv{font-size:1.3rem;}.sl{font-size:.58rem;}}
+@media(max-width:380px){.sg{grid-template-columns:repeat(2,1fr);}}
 </style>
 @endsection
-
 @section('content')
-<div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">Total Spaces</div><div class="stat-value c-purple">{{ $stats['total_spaces'] }}</div></div>
-    <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value c-green">{{ $stats['total_users'] }}</div></div>
-    <div class="stat-card"><div class="stat-label">Total Capacity</div><div class="stat-value c-blue">{{ number_format($stats['total_capacity']) }}</div></div>
-    <div class="stat-card"><div class="stat-label">Current Occupancy</div><div class="stat-value c-yellow">{{ $stats['current_occupancy'] }}</div></div>
-    <div class="stat-card"><div class="stat-label">Avg Occupancy Rate</div><div class="stat-value c-red">{{ $stats['avg_occupancy'] }}%</div></div>
+<div class="sg">
+    <div class="sc"><div class="sl">Total Spaces</div><div class="sv cb">{{ $stats['total_spaces'] }}</div></div>
+    <div class="sc"><div class="sl">Total Users</div><div class="sv cw">{{ $stats['total_users'] }}</div></div>
+    <div class="sc"><div class="sl">Total Capacity</div><div class="sv cp">{{ number_format($stats['total_capacity']) }}</div></div>
+    <div class="sc"><div class="sl">Occupancy</div><div class="sv cy">{{ $stats['current_occupancy'] }}</div></div>
+    <div class="sc"><div class="sl">Avg Rate</div><div class="sv cr">{{ $stats['avg_occupancy'] }}%</div></div>
 </div>
-
-<div class="glass-card">
-    <div class="glass-card-inner">
-        <div class="card-title">Quick View: All Spaces <div class="card-title-line"></div></div>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Space Name</th>
-                    <th>Building</th>
-                    <th>Occupancy</th>
-                    <th>Occupancy %</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+<div class="gc"><div class="gci">
+    <div class="ct">Quick View: All Spaces <div class="ctl"></div></div>
+    <div class="table-wrap">
+        <table class="dt">
+            <thead><tr><th>Space Name</th><th>Building</th><th>Occupancy</th><th>%</th><th>Status</th></tr></thead>
             <tbody>
-                @forelse($spaces as $space)
+                @forelse($spaces as $s)
                 <tr>
-                    <td style="color:var(--text);font-weight:500;">{{ $space->name }}</td>
-                    <td>{{ $space->building }}</td>
-                    <td>{{ $space->current_occupancy }} / {{ $space->capacity }}</td>
-                    <td>{{ $space->occupancy_percent }}%</td>
-                    <td><span class="status-badge status-{{ strtolower($space->status) === 'low' || strtolower($space->status) === 'moderate' ? 'active' : 'inactive' }}">{{ $space->status }}</span></td>
+                    <td style="color:var(--white);font-weight:500;">{{ $s->name }}</td>
+                    <td>{{ $s->building }}</td>
+                    <td>{{ $s->current_occupancy }} / {{ $s->capacity }}</td>
+                    <td>{{ $s->occupancy_percent }}%</td>
+                    <td><span class="sbadge {{ in_array($s->status,['LOW','MODERATE'])?'sa':'si' }}">{{ $s->status }}</span></td>
                 </tr>
-                @empty
-                <tr><td colspan="5" class="empty-state">No spaces found.</td></tr>
+                @empty<tr><td colspan="5"><div class="empty">No spaces found.</div></td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-</div>
+</div></div>
 @endsection
