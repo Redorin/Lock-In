@@ -1,168 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CampuSIMS Admin — @yield('title')</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{
-            --bg:#04080f;--gh:rgba(255,255,255,.08);--gb:rgba(255,255,255,.10);
-            --glass:rgba(255,255,255,.04);--gbd:rgba(255,255,255,.08);
-            --accent:#4f9cf9;--accent2:#7eb8ff;--accent3:#a78bfa;--warn:#fbbf24;
-            --white:rgba(255,255,255,.92);--soft:rgba(255,255,255,.55);--muted:rgba(255,255,255,.28);
-            --danger:#f87171;--sw:72px;--rl:22px;--rm:14px;--rs:10px;
-        }
-        html{background:var(--bg);}
-        body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--white);-webkit-font-smoothing:antialiased;margin:0;padding:0;}
-        body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-            background:radial-gradient(ellipse 70% 55% at 5% 5%,rgba(30,80,200,.2) 0%,transparent 55%),
-                radial-gradient(ellipse 50% 50% at 90% 90%,rgba(100,60,220,.12) 0%,transparent 55%),
-                radial-gradient(ellipse 35% 35% at 55% 15%,rgba(79,156,249,.05) 0%,transparent 50%);}
+        :root { --transition: background .25s, color .25s, border-color .25s, box-shadow .25s; }
 
-        /* ════════════ DESKTOP (>900px) ════════════ */
-        .desktop-sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);z-index:100;background:var(--glass);border-right:1px solid var(--gbd);backdrop-filter:blur(28px);display:flex;flex-direction:column;align-items:center;padding:18px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
-        .s-logo{width:42px;height:42px;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;text-decoration:none;box-shadow:0 4px 20px rgba(79,156,249,.35);flex-shrink:0;}
+        [data-theme="dark"] {
+            --bg:#04080f;--bg2:#060d1a;
+            --surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
+            --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.13);
+            --text:rgba(255,255,255,.92);--text-soft:rgba(255,255,255,.55);--text-muted:rgba(255,255,255,.28);
+            --accent:#4f9cf9;--accent2:#7eb8ff;--accent3:#a78bfa;--warn:#fbbf24;
+            --accent-glow:rgba(79,156,249,.35);--accent-bg:rgba(79,156,249,.12);--accent-border:rgba(79,156,249,.25);
+            --danger:#f87171;--danger-bg:rgba(248,113,113,.1);--danger-border:rgba(248,113,113,.2);
+            --warn-bg:rgba(251,191,36,.1);--warn-border:rgba(251,191,36,.2);
+            --success-bg:rgba(79,156,249,.08);--success-text:#7eb8ff;
+            --sidebar-bg:rgba(255,255,255,.04);--sidebar-top:rgba(4,8,15,.97);
+            --drawer-bg:#060d1a;--modal-bg:#060d1a;
+            --card-inset:inset 0 1px 0 rgba(255,255,255,.07);
+            --mesh1:rgba(30,80,200,.2);--mesh2:rgba(100,60,220,.12);--mesh3:rgba(79,156,249,.05);
+            --toggle-bg:rgba(255,255,255,.08);--toggle-icon:rgba(255,255,255,.6);
+            --table-head:rgba(255,255,255,.04);--table-row-hover:rgba(255,255,255,.02);
+            --input-bg:rgba(255,255,255,.05);
+        }
+        [data-theme="light"] {
+            --bg:#f0f4f8;--bg2:#e8eef5;
+            --surface:#ffffff;--surface2:#f5f8fc;
+            --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.13);
+            --text:#0f1923;--text-soft:#4a5568;--text-muted:#94a3b8;
+            --accent:#2563eb;--accent2:#1d4ed8;--accent3:#7c3aed;--warn:#d97706;
+            --accent-glow:rgba(37,99,235,.2);--accent-bg:rgba(37,99,235,.08);--accent-border:rgba(37,99,235,.2);
+            --danger:#dc2626;--danger-bg:rgba(220,38,38,.08);--danger-border:rgba(220,38,38,.2);
+            --warn-bg:rgba(217,119,6,.08);--warn-border:rgba(217,119,6,.2);
+            --success-bg:rgba(37,99,235,.07);--success-text:#1d4ed8;
+            --sidebar-bg:#ffffff;--sidebar-top:#ffffff;
+            --drawer-bg:#ffffff;--modal-bg:#ffffff;
+            --card-inset:inset 0 1px 0 rgba(255,255,255,.8);
+            --mesh1:rgba(37,99,235,.06);--mesh2:rgba(99,102,241,.04);--mesh3:rgba(37,99,235,.03);
+            --toggle-bg:rgba(0,0,0,.06);--toggle-icon:#64748b;
+            --table-head:#f8fafc;--table-row-hover:#f8fafc;
+            --input-bg:#f8fafc;
+        }
+
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{background:var(--bg);}
+        body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;margin:0;padding:0;transition:var(--transition);}
+        body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;transition:var(--transition);
+            background:radial-gradient(ellipse 70% 55% at 5% 5%,var(--mesh1) 0%,transparent 55%),
+                radial-gradient(ellipse 50% 50% at 90% 90%,var(--mesh2) 0%,transparent 55%),
+                radial-gradient(ellipse 35% 35% at 55% 15%,var(--mesh3) 0%,transparent 50%);}
+
+        /* ════ DESKTOP SIDEBAR ════ */
+        .desktop-sidebar{position:fixed;top:0;left:0;bottom:0;width:72px;z-index:100;background:var(--sidebar-bg);border-right:1px solid var(--border);backdrop-filter:blur(28px);display:flex;flex-direction:column;align-items:center;padding:18px 0;box-shadow:var(--card-inset),2px 0 12px rgba(0,0,0,.06);transition:var(--transition);}
+        .s-logo{width:42px;height:42px;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;text-decoration:none;box-shadow:0 4px 20px var(--accent-glow);flex-shrink:0;}
         .s-logo svg{width:20px;height:20px;}
         .s-nav{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;width:100%;padding:0 10px;}
-        .ni{width:48px;height:48px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--muted);position:relative;transition:background .18s,color .18s;}
+        .ni{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text-muted);position:relative;transition:background .18s,color .18s;}
         .ni svg{width:20px;height:20px;transition:transform .18s;}
-        .ni:hover{background:var(--gh);color:var(--soft);}
+        .ni:hover{background:var(--surface2);color:var(--text-soft);}
         .ni:hover svg{transform:scale(1.1);}
-        .ni.active{background:rgba(79,156,249,.15);color:var(--accent2);}
-        .ni.active::before{content:'';position:absolute;left:-10px;width:3px;height:22px;background:var(--accent);border-radius:0 3px 3px 0;box-shadow:0 0 12px var(--accent);}
-        .ni .tip{position:absolute;left:58px;background:rgba(4,8,15,.96);border:1px solid rgba(255,255,255,.1);color:var(--white);font-size:.73rem;font-weight:500;padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transform:translateX(-6px);transition:opacity .15s,transform .15s;z-index:999;}
+        .ni.active{background:var(--accent-bg);color:var(--accent);}
+        .ni.active::before{content:'';position:absolute;left:-10px;width:3px;height:22px;background:var(--accent);border-radius:0 3px 3px 0;box-shadow:0 0 10px var(--accent-glow);}
+        .ni .tip{position:absolute;left:58px;background:var(--modal-bg);border:1px solid var(--border2);color:var(--text);font-size:.73rem;font-weight:500;padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transform:translateX(-6px);transition:opacity .15s,transform .15s;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.12);}
         .ni:hover .tip{opacity:1;transform:translateX(0);}
         .nbadge{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--warn);color:#1a0f00;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
-        .s-bot{display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 10px;}
-        .s-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#fff;border:2px solid rgba(79,156,249,.4);}
-        .s-lo{width:38px;height:38px;border-radius:var(--rs);background:transparent;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .18s;}
+        .s-bot{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;}
+        .s-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#fff;border:2px solid var(--accent-border);}
+        .s-lo{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .18s;}
         .s-lo svg{width:16px;height:16px;}
-        .s-lo:hover{background:rgba(248,113,113,.1);color:var(--danger);border-color:rgba(248,113,113,.25);}
+        .s-lo:hover{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-border);}
+        .theme-toggle{width:38px;height:38px;border-radius:10px;background:var(--toggle-bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--toggle-icon);transition:all .18s;}
+        .theme-toggle svg{width:17px;height:17px;}
+        .theme-toggle:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);}
+        .icon-sun{display:none;}
+        .icon-moon{display:block;}
+        [data-theme="light"] .icon-sun{display:block;}
+        [data-theme="light"] .icon-moon{display:none;}
 
-        .desktop-main{margin-left:var(--sw);min-height:100vh;position:relative;z-index:1;}
+        /* ════ DESKTOP MAIN ════ */
+        .desktop-main{margin-left:72px;min-height:100vh;position:relative;z-index:1;}
         .desktop-topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px 0;flex-wrap:wrap;gap:12px;}
-        .topbar-title h1{font-size:1.65rem;font-weight:800;letter-spacing:-.5px;}
-        .topbar-title p{font-size:.83rem;color:var(--soft);margin-top:3px;}
-        .abadge{display:flex;align-items:center;gap:8px;background:rgba(79,156,249,.08);border:1px solid rgba(79,156,249,.15);border-radius:99px;padding:7px 16px 7px 10px;font-size:.82rem;color:var(--accent2);}
+        .topbar-title h1{font-size:1.65rem;font-weight:800;letter-spacing:-.5px;color:var(--text);}
+        .topbar-title p{font-size:.83rem;color:var(--text-soft);margin-top:3px;}
+        .abadge{display:flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:99px;padding:7px 16px 7px 10px;font-size:.82rem;color:var(--accent);}
         .abadge svg{width:14px;height:14px;}
         .desktop-content{padding:20px 28px 40px;}
 
-        /* ════════════ MOBILE (<900px) ════════════ */
-        .mobile-topbar{display:none;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(4,8,15,.97);border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+        /* ════ MOBILE ════ */
+        .mobile-topbar{display:none;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--sidebar-top);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:var(--transition);}
         .mob-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
         .mob-icon{width:34px;height:34px;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);border-radius:9px;display:flex;align-items:center;justify-content:center;}
         .mob-icon svg{width:16px;height:16px;}
-        .mob-name{font-size:1rem;font-weight:800;letter-spacing:-.3px;color:var(--white);}
-        .mob-name span{color:var(--accent2);}
+        .mob-name{font-size:1rem;font-weight:800;letter-spacing:-.3px;color:var(--text);}
+        .mob-name span{color:var(--accent);}
         .mob-right{display:flex;align-items:center;gap:8px;}
-        .mob-pending{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.2);color:var(--warn);font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:99px;}
-        .ham{width:38px;height:38px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--soft);}
+        .mob-pending{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn);font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:99px;}
+        .ham{width:38px;height:38px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-soft);}
         .ham svg{width:20px;height:20px;}
+        .mob-theme{width:38px;height:38px;background:var(--toggle-bg);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--toggle-icon);}
+        .mob-theme svg{width:18px;height:18px;}
         .mobile-content{display:none;padding:16px 16px 40px;position:relative;z-index:1;}
         .mob-page-header{margin-bottom:16px;}
-        .mob-page-header h2{font-size:1.3rem;font-weight:800;letter-spacing:-.4px;}
-        .mob-page-header p{font-size:.78rem;color:var(--soft);margin-top:2px;}
+        .mob-page-header h2{font-size:1.3rem;font-weight:800;letter-spacing:-.4px;color:var(--text);}
+        .mob-page-header p{font-size:.78rem;color:var(--text-soft);margin-top:2px;}
 
-        /* ════════════ DRAWER ════════════ */
-        .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);}
+        /* ════ DRAWER ════ */
+        .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);}
         .drawer-overlay.open{display:block;}
-        .drawer{position:fixed;top:0;left:-290px;bottom:0;width:290px;z-index:201;background:#060d1a;border-right:1px solid rgba(255,255,255,.1);transition:left .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+        .drawer{position:fixed;top:0;left:-290px;bottom:0;width:290px;z-index:201;background:var(--drawer-bg);border-right:1px solid var(--border2);transition:left .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;box-shadow:4px 0 24px rgba(0,0,0,.12);}
         .drawer.open{left:0;}
-        .d-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid rgba(255,255,255,.07);}
+        .d-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
         .d-brand{display:flex;align-items:center;gap:10px;}
         .d-brand-icon{width:36px;height:36px;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);border-radius:10px;display:flex;align-items:center;justify-content:center;}
         .d-brand-icon svg{width:18px;height:18px;}
-        .d-brand-name{font-size:1rem;font-weight:800;letter-spacing:-.3px;}
-        .d-brand-name span{color:var(--accent2);}
-        .d-close{width:32px;height:32px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--soft);}
+        .d-brand-name{font-size:1rem;font-weight:800;letter-spacing:-.3px;color:var(--text);}
+        .d-brand-name span{color:var(--accent);}
+        .d-close{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-soft);}
         .d-close svg{width:16px;height:16px;}
-        .d-user{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);}
-        .d-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;border:2px solid rgba(79,156,249,.4);flex-shrink:0;}
-        .d-uname{font-size:.92rem;font-weight:600;}
-        .d-urole{font-size:.7rem;color:var(--accent2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+        .d-user{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);}
+        .d-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;border:2px solid var(--accent-border);flex-shrink:0;}
+        .d-uname{font-size:.92rem;font-weight:600;color:var(--text);}
+        .d-urole{font-size:.7rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
         .d-nav{flex:1;padding:12px;overflow-y:auto;}
-        .d-ni{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:11px;text-decoration:none;color:var(--soft);font-size:.9rem;font-weight:500;transition:background .15s,color .15s;margin-bottom:3px;position:relative;}
-        .d-ni svg{width:19px;height:19px;flex-shrink:0;opacity:.6;}
-        .d-ni:hover{background:rgba(255,255,255,.06);color:var(--white);}
-        .d-ni.active{background:rgba(79,156,249,.12);color:var(--accent2);}
+        .d-ni{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:11px;text-decoration:none;color:var(--text-soft);font-size:.9rem;font-weight:500;transition:background .15s,color .15s;margin-bottom:3px;position:relative;}
+        .d-ni svg{width:19px;height:19px;flex-shrink:0;opacity:.7;}
+        .d-ni:hover{background:var(--surface2);color:var(--text);}
+        .d-ni.active{background:var(--accent-bg);color:var(--accent);}
         .d-ni.active svg{opacity:1;}
-        .d-nb{margin-left:auto;background:rgba(251,191,36,.12);color:var(--warn);font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:99px;}
-        .d-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,.07);}
-        .d-logout{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);border-radius:10px;color:var(--danger);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;}
+        .d-nb{margin-left:auto;background:var(--warn-bg);color:var(--warn);font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:99px;}
+        .d-foot{padding:14px 20px;border-top:1px solid var(--border);}
+        .d-theme{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--toggle-bg);border:1px solid var(--border);border-radius:10px;color:var(--text-soft);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;margin-bottom:10px;transition:background .15s;}
+        .d-theme svg{width:18px;height:18px;}
+        .d-theme:hover{background:var(--accent-bg);color:var(--accent);}
+        .d-logout{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:10px;color:var(--danger);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;}
         .d-logout svg{width:18px;height:18px;}
-        .d-logout:hover{background:rgba(248,113,113,.15);}
+        .d-logout:hover{background:rgba(220,38,38,.15);}
 
-        /* ════════════ SHARED COMPONENTS ════════════ */
-        .gc{background:var(--glass);border:1px solid var(--gbd);border-radius:var(--rl);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
+        /* ════ SHARED COMPONENTS ════ */
+        .gc{background:var(--surface);border:1px solid var(--border);border-radius:22px;backdrop-filter:blur(16px);box-shadow:var(--card-inset),0 2px 12px rgba(0,0,0,.06);transition:var(--transition);}
         .gci{padding:24px;}
-        .ct{font-size:1rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-        .ctl{flex:1;height:1px;background:rgba(255,255,255,.07);min-width:20px;}
+        .ct{font-size:1rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--text);}
+        .ctl{flex:1;height:1px;background:var(--border);min-width:20px;}
         .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
         .dt{width:100%;border-collapse:collapse;min-width:480px;}
-        .dt th{text-align:left;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);}
-        .dt td{padding:12px 12px;font-size:.85rem;color:var(--soft);border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+        .dt th{text-align:left;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);padding:10px 12px;border-bottom:1px solid var(--border);background:var(--table-head);}
+        .dt td{padding:12px 12px;font-size:.85rem;color:var(--text-soft);border-bottom:1px solid var(--border);vertical-align:middle;}
         .dt tr:last-child td{border-bottom:none;}
-        .dt tr:hover td{background:rgba(255,255,255,.02);}
-        .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;border:none;cursor:pointer;transition:opacity .15s,transform .12s;text-decoration:none;white-space:nowrap;}
+        .dt tr:hover td{background:var(--table-row-hover);}
+        .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;border:none;cursor:pointer;transition:opacity .15s,transform .12s;text-decoration:none;white-space:nowrap;}
         .btn:hover{opacity:.85;transform:translateY(-1px);}
         .btn svg{width:12px;height:12px;}
-        .btn-blue{background:linear-gradient(135deg,#4f9cf9,#1a6fe8);color:#fff;box-shadow:0 2px 12px rgba(79,156,249,.25);}
-        .btn-danger{background:rgba(248,113,113,.1);color:var(--danger);border:1px solid rgba(248,113,113,.2);}
-        .btn-warn{background:rgba(251,191,36,.1);color:var(--warn);border:1px solid rgba(251,191,36,.2);}
-        .btn-success{background:rgba(79,156,249,.1);color:var(--accent2);border:1px solid rgba(79,156,249,.2);}
-        .btn-ghost{background:rgba(255,255,255,.05);color:var(--soft);border:1px solid rgba(255,255,255,.1);}
-        .alert{padding:11px 14px;border-radius:var(--rs);font-size:.83rem;margin-bottom:16px;}
-        .alert-success{background:rgba(79,156,249,.08);color:var(--accent2);border:1px solid rgba(79,156,249,.18);}
-        .alert-danger{background:rgba(248,113,113,.08);color:var(--danger);border:1px solid rgba(248,113,113,.18);}
+        .btn-blue{background:linear-gradient(135deg,#4f9cf9,#1a6fe8);color:#fff;box-shadow:0 2px 12px var(--accent-glow);}
+        .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
+        .btn-warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border);}
+        .btn-success{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);}
+        .btn-ghost{background:var(--surface2);color:var(--text-soft);border:1px solid var(--border2);}
+        .alert{padding:11px 14px;border-radius:10px;font-size:.83rem;margin-bottom:16px;}
+        .alert-success{background:var(--success-bg);color:var(--success-text);border:1px solid var(--accent-border);}
+        .alert-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
         .field{margin-bottom:14px;}
-        .field label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-        .field input,.field select,.field textarea{width:100%;padding:10px 14px;font-family:'Outfit',sans-serif;font-size:.875rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);color:var(--white);outline:none;transition:border-color .2s;}
-        .field input::placeholder,.field textarea::placeholder{color:var(--muted);}
-        .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(79,156,249,.5);box-shadow:0 0 0 3px rgba(79,156,249,.1);}
-        .field select option{background:#060d1a;}
+        .field label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+        .field input,.field select,.field textarea{width:100%;padding:10px 14px;font-family:'Outfit',sans-serif;font-size:.875rem;background:var(--input-bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+        .field input::placeholder,.field textarea::placeholder{color:var(--text-muted);}
+        .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
+        .field select option{background:var(--modal-bg);color:var(--text);}
         .field textarea{resize:vertical;min-height:80px;}
-        .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px;}
+        .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px;}
         .modal-overlay.open{display:flex;}
-        .modal{background:#060d1a;border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:28px;width:100%;max-width:440px;animation:mi .25s ease both;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);max-height:90vh;overflow-y:auto;}
+        .modal{background:var(--modal-bg);border:1px solid var(--border2);border-radius:22px;padding:28px;width:100%;max-width:440px;animation:mi .25s ease both;box-shadow:0 20px 60px rgba(0,0,0,.2),var(--card-inset);max-height:90vh;overflow-y:auto;}
         @keyframes mi{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-        .modal-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;}
-        .modal-sub{font-size:.83rem;color:var(--soft);margin-bottom:20px;}
+        .modal-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--text);}
+        .modal-sub{font-size:.83rem;color:var(--text-soft);margin-bottom:20px;}
         .modal-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
         .modal-actions .btn{flex:1;justify-content:center;}
         .sbadge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:.65rem;font-weight:700;letter-spacing:.06em;}
-        .sa{background:rgba(79,156,249,.12);color:var(--accent2);border:1px solid rgba(79,156,249,.2);}
-        .si{background:rgba(248,113,113,.1);color:var(--danger);border:1px solid rgba(248,113,113,.2);}
-        .sp{background:rgba(251,191,36,.1);color:var(--warn);border:1px solid rgba(251,191,36,.2);}
-        .sr{background:rgba(248,113,113,.1);color:var(--danger);border:1px solid rgba(248,113,113,.2);}
-        .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:.875rem;}
-        .empty svg{width:32px;height:32px;margin:0 auto 12px;opacity:.2;display:block;}
+        .sa{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);}
+        .si{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
+        .sp{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border);}
+        .sr{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
+        .empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:.875rem;}
+        .empty svg{width:32px;height:32px;margin:0 auto 12px;opacity:.25;display:block;}
         .search-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
         .siw{position:relative;flex:1;min-width:160px;}
-        .siw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none;}
-        .si-inp{width:100%;padding:9px 14px 9px 36px;font-family:'Outfit',sans-serif;font-size:.875rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);color:var(--white);outline:none;}
-        .si-inp::placeholder{color:var(--muted);}
-        .si-inp:focus{border-color:rgba(79,156,249,.5);box-shadow:0 0 0 3px rgba(79,156,249,.1);}
-        .fsel{padding:9px 14px;font-family:'Outfit',sans-serif;font-size:.875rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);color:var(--white);outline:none;cursor:pointer;}
-        .fsel option{background:#060d1a;}
-
-        /* timeout banner */
-        .t-banner{display:none;position:fixed;bottom:16px;right:16px;z-index:9999;background:rgba(4,8,15,.97);border:1px solid rgba(251,191,36,.3);border-radius:14px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,.5);max-width:calc(100vw - 32px);backdrop-filter:blur(16px);}
+        .siw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);pointer-events:none;}
+        .si-inp{width:100%;padding:9px 14px 9px 36px;font-family:'Outfit',sans-serif;font-size:.875rem;background:var(--input-bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;transition:border-color .2s;}
+        .si-inp::placeholder{color:var(--text-muted);}
+        .si-inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
+        .fsel{padding:9px 14px;font-family:'Outfit',sans-serif;font-size:.875rem;background:var(--input-bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);outline:none;cursor:pointer;}
+        .fsel option{background:var(--modal-bg);color:var(--text);}
+        .t-banner{display:none;position:fixed;bottom:16px;right:16px;z-index:9999;background:var(--surface);border:1px solid var(--warn-border);border-radius:14px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,.15);max-width:calc(100vw - 32px);backdrop-filter:blur(16px);}
         .t-banner.show{display:block;}
         .t-title{font-size:.85rem;font-weight:700;color:var(--warn);margin-bottom:4px;}
-        .t-sub{font-size:.75rem;color:var(--soft);}
+        .t-sub{font-size:.75rem;color:var(--text-soft);}
         .t-count{font-size:1.2rem;font-weight:800;color:var(--warn);margin:8px 0;}
-        .t-btn{padding:7px 16px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);border-radius:8px;color:var(--warn);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;}
+        .t-btn{padding:7px 16px;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:8px;color:var(--warn);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;}
 
-        /* ════════════ BREAKPOINTS ════════════ */
-        /* Desktop: 900px and above */
         @media(min-width:900px){
             .mobile-topbar,.mobile-content,.drawer,.drawer-overlay{display:none!important;}
             .desktop-sidebar{display:flex;}
             .desktop-main{display:block;}
         }
-        /* Mobile: below 900px */
         @media(max-width:899px){
             .desktop-sidebar,.desktop-main{display:none!important;}
             .mobile-topbar{display:flex;}
@@ -181,45 +221,22 @@
         <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L3 6v8l7 4 7-4V6L10 2z" fill="#fff" fill-opacity=".9"/><path d="M10 2v12M3 6l7 4 7-4" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/></svg>
     </a>
     <nav class="s-nav">
-        <a href="{{ route('admin.dashboard') }}" class="ni {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-            <span class="tip">Dashboard</span>
-        </a>
-        <a href="{{ route('admin.spaces') }}" class="ni {{ request()->routeIs('admin.spaces') ? 'active' : '' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span class="tip">Spaces</span>
-        </a>
-        <a href="{{ route('admin.qr-codes') }}" class="ni {{ request()->routeIs('admin.qr-codes') ? 'active' : '' }}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/>
-        <rect x="3" y="16" width="5" height="5"/><line x1="16" y1="16" x2="21" y2="21"/>
-    </svg>
-    <span class="tip">QR Codes</span>
-</a>
-        <a href="{{ route('admin.users') }}" class="ni {{ request()->routeIs('admin.users') ? 'active' : '' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span class="tip">Users</span>
-        </a>
-        <a href="{{ route('admin.verifications') }}" class="ni {{ request()->routeIs('admin.verifications') ? 'active' : '' }}" style="position:relative;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            @if($pc>0)<span class="nbadge">{{ $pc }}</span>@endif
-            <span class="tip">Verifications</span>
-        </a>
-        <a href="{{ route('admin.admins') }}" class="ni {{ request()->routeIs('admin.admins') ? 'active' : '' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span class="tip">Admins</span>
-        </a>
-        <a href="{{ route('admin.activity-logs') }}" class="ni {{ request()->routeIs('admin.activity-logs') ? 'active' : '' }}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span class="tip">Activity Logs</span>
-        </a>
+        <a href="{{ route('admin.dashboard') }}" class="ni {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="tip">Dashboard</span></a>
+        <a href="{{ route('admin.spaces') }}" class="ni {{ request()->routeIs('admin.spaces') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tip">Spaces</span></a>
+        <a href="{{ route('admin.qr-codes') }}" class="ni {{ request()->routeIs('admin.qr-codes') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><line x1="16" y1="16" x2="21" y2="16"/><line x1="16" y1="21" x2="21" y2="21"/><line x1="16" y1="16" x2="16" y2="21"/></svg><span class="tip">QR Codes</span></a>
+        <a href="{{ route('admin.users') }}" class="ni {{ request()->routeIs('admin.users') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tip">Users</span></a>
+        <a href="{{ route('admin.verifications') }}" class="ni {{ request()->routeIs('admin.verifications') ? 'active' : '' }}" style="position:relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>@if($pc>0)<span class="nbadge">{{ $pc }}</span>@endif<span class="tip">Verifications</span></a>
+        <a href="{{ route('admin.admins') }}" class="ni {{ request()->routeIs('admin.admins') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="tip">Admins</span></a>
+        <a href="{{ route('admin.activity-logs') }}" class="ni {{ request()->routeIs('admin.activity-logs') ? 'active' : '' }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="tip">Activity Logs</span></a>
     </nav>
     <div class="s-bot">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
         <div class="s-av">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
         <form method="POST" action="{{ route('logout') }}" id="lf-desktop">@csrf
-            <button type="submit" class="s-lo" title="Sign out">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            </button>
+            <button type="submit" class="s-lo" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
         </form>
     </div>
 </aside>
@@ -245,9 +262,11 @@
     </a>
     <div class="mob-right">
         @if($pc>0)<span class="mob-pending">{{ $pc }} pending</span>@endif
-        <button class="ham" onclick="openDrawer()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <button class="mob-theme" onclick="toggleTheme()">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
+        <button class="ham" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
 </div>
 
@@ -271,14 +290,20 @@
         <div><div class="d-uname">{{ auth()->user()->name }}</div><div class="d-urole">Admin</div></div>
     </div>
     <nav class="d-nav">
-        <a href="{{ route('admin.dashboard') }}" class="d-ni {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
-        <a href="{{ route('admin.spaces') }}" class="d-ni {{ request()->routeIs('admin.spaces') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Spaces</a>
-        <a href="{{ route('admin.users') }}" class="d-ni {{ request()->routeIs('admin.users') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+        <a href="{{ route('admin.dashboard') }}"    class="d-ni {{ request()->routeIs('admin.dashboard')    ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+        <a href="{{ route('admin.spaces') }}"       class="d-ni {{ request()->routeIs('admin.spaces')       ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Spaces</a>
+        <a href="{{ route('admin.qr-codes') }}"     class="d-ni {{ request()->routeIs('admin.qr-codes')     ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><line x1="16" y1="16" x2="21" y2="16"/><line x1="16" y1="21" x2="21" y2="21"/><line x1="16" y1="16" x2="16" y2="21"/></svg>QR Codes</a>
+        <a href="{{ route('admin.users') }}"        class="d-ni {{ request()->routeIs('admin.users')        ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
         <a href="{{ route('admin.verifications') }}" class="d-ni {{ request()->routeIs('admin.verifications') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Verifications @if($pc>0)<span class="d-nb">{{ $pc }}</span>@endif</a>
-        <a href="{{ route('admin.admins') }}" class="d-ni {{ request()->routeIs('admin.admins') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admins</a>
+        <a href="{{ route('admin.admins') }}"       class="d-ni {{ request()->routeIs('admin.admins')       ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admins</a>
         <a href="{{ route('admin.activity-logs') }}" class="d-ni {{ request()->routeIs('admin.activity-logs') ? 'active' : '' }}" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>Activity Logs</a>
     </nav>
     <div class="d-foot">
+        <button class="d-theme" onclick="toggleTheme()">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <span id="themeLabel">Switch to Light Mode</span>
+        </button>
         <form method="POST" action="{{ route('logout') }}">@csrf
             <button type="submit" class="d-logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
         </form>
@@ -293,11 +318,24 @@
 </div>
 
 <script>
+const html = document.documentElement;
+function applyTheme(theme) {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('campusims_theme', theme);
+    const label = document.getElementById('themeLabel');
+    if (label) label.textContent = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+}
+function toggleTheme() {
+    applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+(function() { applyTheme(localStorage.getItem('campusims_theme') || 'dark'); })();
+
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
 let _tx=0;
 document.getElementById('drawer').addEventListener('touchstart',e=>{_tx=e.touches[0].clientX;},{passive:true});
 document.getElementById('drawer').addEventListener('touchend',e=>{if(_tx-e.changedTouches[0].clientX>50)closeDrawer();},{passive:true});
+
 let rem=3600,warned=false,cd=60,ci;
 function rt(){rem=3600;warned=false;clearInterval(ci);document.getElementById('tb').classList.remove('show');}
 function sc(){cd=60;document.getElementById('tb').classList.add('show');ci=setInterval(()=>{cd--;document.getElementById('tc').textContent=cd+'s';if(cd<=0){clearInterval(ci);submitLogout();}},1000);}
