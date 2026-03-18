@@ -6,23 +6,58 @@
 @section('styles')
 <style>
 .ug{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
-.uc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--rl);backdrop-filter:blur(16px);padding:22px;transition:border-color .2s,transform .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
-.uc:hover{border-color:rgba(79,156,249,.25);transform:translateY(-2px);}
+
+.uc{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:22px;
+    transition:border-color .2s, transform .2s, box-shadow .2s, background .25s;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.uc:hover{
+    border-color:var(--accent-border);
+    transform:translateY(-2px);
+    box-shadow:0 6px 24px rgba(0,0,0,.1);
+}
+
 .uct{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-.uav{width:50px;height:50px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#fff;border:2px solid rgba(79,156,249,.3);}
-.uav.off{background:linear-gradient(135deg,#333,#1a1a1a);filter:grayscale(1);border-color:rgba(255,255,255,.1);}
-.un{font-size:.95rem;font-weight:700;color:var(--white);}
-.ue{font-size:.75rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
-.uid{display:inline-block;background:rgba(79,156,249,.08);border:1px solid rgba(79,156,249,.15);color:var(--accent2);font-size:.72rem;font-weight:600;letter-spacing:.04em;padding:4px 10px;border-radius:99px;margin-bottom:14px;}
+
+.uav{
+    width:50px;height:50px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,#4f9cf9,#1a6fe8);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.1rem;font-weight:800;color:#fff;
+    border:2px solid var(--accent-border);
+    box-shadow:0 2px 8px var(--accent-glow);
+}
+.uav.off{
+    background:var(--surface2);
+    filter:grayscale(1);
+    border-color:var(--border2);
+    box-shadow:none;
+}
+.uav.off span{ color:var(--text-muted); }
+
+.un{font-size:.95rem;font-weight:700;color:var(--text);}
+.ue{font-size:.75rem;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+
+.uid{
+    display:inline-block;
+    background:var(--accent-bg);
+    border:1px solid var(--accent-border);
+    color:var(--accent);
+    font-size:.72rem;font-weight:600;letter-spacing:.04em;
+    padding:4px 10px;border-radius:99px;margin-bottom:14px;
+}
+
 .uca{display:flex;gap:8px;}
 .uca .btn{flex:1;justify-content:center;font-size:.78rem;padding:7px 10px;}
-.ri{font-size:.8rem;color:var(--muted);margin-bottom:14px;}
+.ri{font-size:.8rem;color:var(--text-muted);margin-bottom:14px;}
 </style>
 @endsection
 
 @section('content')
-
-{{-- Search & Filter --}}
 <form method="GET" action="{{ route('admin.users') }}" class="search-bar">
     <div class="siw">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -30,8 +65,8 @@
     </div>
     <select name="status" class="fsel" onchange="this.form.submit()">
         <option value="">All Status</option>
-        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+        <option value="active"   {{ request('status')=='active'   ? 'selected' : '' }}>Active</option>
+        <option value="inactive" {{ request('status')=='inactive' ? 'selected' : '' }}>Inactive</option>
     </select>
     <button type="submit" class="btn btn-ghost">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -47,8 +82,9 @@
 @endif
 
 @if($users->isEmpty())
-    <div style="text-align:center;padding:60px;color:var(--muted);">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 14px;display:block;opacity:.2;">
+    <div style="text-align:center;padding:60px;color:var(--text-muted);">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             style="margin:0 auto 14px;display:block;opacity:.2;">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
         </svg>
@@ -60,7 +96,7 @@
         <div class="uc">
             <div class="uct">
                 <div class="uav {{ !$u->is_active ? 'off' : '' }}">
-                    {{ strtoupper(substr($u->name, 0, 1)) }}
+                    <span>{{ strtoupper(substr($u->name, 0, 1)) }}</span>
                 </div>
                 <div style="min-width:0;">
                     <div class="un">{{ $u->name }}</div>
@@ -78,8 +114,7 @@
 
             <div class="uca">
                 <form method="POST" action="{{ route('admin.users.toggle', $u) }}">
-                    @csrf
-                    @method('PATCH')
+                    @csrf @method('PATCH')
                     <button type="submit" class="btn {{ $u->is_active ? 'btn-warn' : 'btn-success' }}">
                         @if($u->is_active)
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
@@ -90,11 +125,9 @@
                         @endif
                     </button>
                 </form>
-
                 <form method="POST" action="{{ route('admin.users.destroy', $u) }}"
                       onsubmit="return confirm('Permanently delete {{ addslashes($u->name) }}?')">
-                    @csrf
-                    @method('DELETE')
+                    @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
                         Delete
@@ -105,5 +138,4 @@
         @endforeach
     </div>
 @endif
-
 @endsection

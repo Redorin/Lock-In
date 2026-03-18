@@ -5,74 +5,158 @@
 
 @section('styles')
 <style>
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
-    .stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px;backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
-    .stat-lbl{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-    .stat-val{font-size:1.5rem;font-weight:800;letter-spacing:-.5px;}
-    .cb{color:var(--accent2);}.cp{color:var(--accent3);}.cw{color:rgba(255,255,255,.85);}
+    /* ── Stat cards ── */
+    .stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px; }
+    .stat {
+        background:var(--surface);border:1px solid var(--border);
+        border-radius:16px;padding:18px 20px;
+        box-shadow:var(--shadow-sm),var(--inset);
+        position:relative;overflow:hidden;
+        animation:statIn .5s var(--ease) both;
+        transition:transform var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t) var(--ease);
+        cursor:default;
+    }
+    .stat::after {
+        content:'';position:absolute;inset:0;
+        background:linear-gradient(135deg, var(--accent-bg), transparent);
+        opacity:0;transition:opacity var(--t) var(--ease);
+    }
+    .stat:hover { transform:translateY(-3px);box-shadow:var(--shadow-md),var(--inset); }
+    .stat:hover::after { opacity:1; }
+    .stat:nth-child(1){animation-delay:.05s}
+    .stat:nth-child(2){animation-delay:.1s}
+    .stat:nth-child(3){animation-delay:.15s}
+    @keyframes statIn { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
 
-    .bsect{margin-bottom:24px;}
-    .bhdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-    .btag{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .bline{flex:1;height:1px;background:rgba(255,255,255,.07);}
+    .stat-icon {
+        width:34px;height:34px;border-radius:9px;
+        background:var(--accent-bg);border:1px solid var(--accent-border);
+        display:flex;align-items:center;justify-content:center;
+        margin-bottom:12px;position:relative;z-index:1;
+    }
+    .stat-icon svg { width:16px;height:16px;color:var(--accent2); }
+    .stat-lbl { font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;position:relative;z-index:1; }
+    .stat-val {
+        font-family:'Plus Jakarta Sans',sans-serif;
+        font-size:1.8rem;font-weight:800;letter-spacing:-.6px;
+        position:relative;z-index:1;
+        background:linear-gradient(135deg,var(--text),var(--text-soft));
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .stat-val.blue { background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text; }
 
-    .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
-    .sc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;backdrop-filter:blur(16px);transition:transform .2s,border-color .2s;animation:fu .5s ease both;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
-    .sc:hover{transform:translateY(-2px);border-color:rgba(79,156,249,.25);}
-    @keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-    .sth{height:90px;background:linear-gradient(135deg,rgba(79,156,249,.08),rgba(167,139,250,.05));display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,.06);position:relative;}
-    .sth::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(79,156,249,.06) 0%,transparent 70%);}
-    .sth svg{width:28px;height:28px;opacity:.2;color:var(--accent2);}
-    .sbody{padding:12px 14px;}
-    .sname{font-size:.88rem;font-weight:600;margin-bottom:8px;}
-    .smeta{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-    .scnt{font-size:.8rem;font-weight:600;color:var(--soft);}
-    .badge{font-size:.6rem;font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:99px;}
-    .bl{background:rgba(79,156,249,.12);color:#7eb8ff;border:1px solid rgba(79,156,249,.2);}
-    .bm{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
-    .bh{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.2);}
-    .bf{background:rgba(127,29,29,.3);color:#fca5a5;border:1px solid rgba(239,68,68,.3);}
-    .pt{height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;}
-    .pf{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-    .pfl{background:linear-gradient(90deg,#4f9cf9,#7eb8ff);}
-    .pfm{background:linear-gradient(90deg,#fbbf24,#f59e0b);}
-    .pfh{background:linear-gradient(90deg,#f87171,#ef4444);}
-    .pff{background:linear-gradient(90deg,#fca5a5,#ef4444);}
+    /* ── Building sections ── */
+    .bsect { margin-bottom:28px; }
+    .bhdr { display:flex;align-items:center;gap:12px;margin-bottom:14px; }
+    .btag {
+        font-family:'Plus Jakarta Sans',sans-serif;
+        font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--text-muted);
+    }
+    .bline { flex:1;height:1px;background:var(--border); }
+
+    /* ── Space cards ── */
+    .sgrid { display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px; }
+    .sc {
+        background:var(--surface);border:1px solid var(--border);
+        border-radius:16px;overflow:hidden;
+        box-shadow:var(--shadow-sm),var(--inset);
+        transition:transform var(--t) var(--ease), border-color var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t) var(--ease);
+        animation:cardIn .5s var(--ease) both;
+        cursor:default;
+    }
+    .sc:hover { transform:translateY(-4px);border-color:var(--accent-border);box-shadow:var(--shadow-md),var(--inset); }
+    @keyframes cardIn { from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)} }
+
+    .sth {
+        height:88px;
+        background:var(--surface2);
+        display:flex;align-items:center;justify-content:center;
+        border-bottom:1px solid var(--border);
+        position:relative;overflow:hidden;
+    }
+    .sth::before {
+        content:'';position:absolute;inset:0;
+        background:radial-gradient(ellipse at center, var(--accent-bg) 0%, transparent 70%);
+        opacity:0;transition:opacity var(--t) var(--ease);
+    }
+    .sc:hover .sth::before { opacity:1; }
+    .sth svg { width:28px;height:28px;color:var(--accent2);opacity:.2;transition:opacity var(--t) var(--ease), transform var(--t) var(--ease-back); }
+    .sc:hover .sth svg { opacity:.4;transform:scale(1.15); }
+
+    .sbody { padding:14px; }
+    .sname { font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:700;margin-bottom:10px;color:var(--text); }
+    .smeta { display:flex;align-items:center;justify-content:space-between;margin-bottom:8px; }
+    .scnt { font-size:.8rem;font-weight:600;color:var(--text-soft); }
+
+    /* Status badges */
+    .badge { font-size:.6rem;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:99px; }
+    .bl { background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-border); }
+    .bm { background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border); }
+    .bh { background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border); }
+    .bf { background:rgba(220,38,38,.15);color:var(--danger);border:1px solid var(--danger-border); }
+
+    /* Progress bar */
+    .pt { height:3px;background:var(--border);border-radius:99px;overflow:hidden; }
+    .pf { height:100%;border-radius:99px;transition:width 1s var(--ease); }
+    .pfl { background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+    .pfm { background:linear-gradient(90deg,var(--warn),#f59e0b); }
+    .pfh { background:linear-gradient(90deg,var(--danger),#f87171); }
+    .pff { background:var(--danger); }
 
     @media(max-width:600px){
-        .stats{grid-template-columns:repeat(3,1fr);gap:8px;}
-        .stat{padding:12px 10px;}
-        .stat-lbl{font-size:.58rem;}
-        .stat-val{font-size:1.2rem;}
-        .sgrid{grid-template-columns:1fr 1fr;}
-        .sth{height:70px;}
+        .stats { gap:8px; }
+        .stat { padding:12px 14px; }
+        .stat-val { font-size:1.4rem; }
+        .sgrid { grid-template-columns:1fr 1fr; }
+        .sth { height:70px; }
     }
-    @media(max-width:380px){
-        .sgrid{grid-template-columns:1fr;}
-    }
+    @media(max-width:380px){ .sgrid{grid-template-columns:1fr;} }
 </style>
 @endsection
 
 @section('content')
-@php $total=$spaces->count();$low=$spaces->where('status','LOW')->count();$crowded=$spaces->whereIn('status',['HIGH','FULL'])->count(); @endphp
+@php
+    $total = $spaces->count();
+    $low   = $spaces->where('status','LOW')->count();
+    $crowd = $spaces->whereIn('status',['HIGH','FULL'])->count();
+@endphp
+
 <div class="stats">
-    <div class="stat"><div class="stat-lbl">Total</div><div class="stat-val cb">{{ $total }}</div></div>
-    <div class="stat"><div class="stat-lbl">Available</div><div class="stat-val cw">{{ $low }}</div></div>
-    <div class="stat"><div class="stat-lbl">Crowded</div><div class="stat-val cp">{{ $crowded }}</div></div>
+    <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+        <div class="stat-lbl">Total Spaces</div>
+        <div class="stat-val blue">{{ $total }}</div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="stat-lbl">Available</div>
+        <div class="stat-val">{{ $low }}</div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="stat-lbl">Crowded</div>
+        <div class="stat-val">{{ $crowd }}</div>
+    </div>
 </div>
 
 @forelse($grouped as $building => $bspaces)
 <div class="bsect">
     <div class="bhdr"><span class="btag">{{ $building }}</span><div class="bline"></div></div>
     <div class="sgrid">
-        @foreach($bspaces as $space)
+        @foreach($bspaces as $i => $space)
         @php
-            $st=strtolower($space->status);
-            $bc=$st==='low'?'bl':($st==='moderate'?'bm':($st==='high'?'bh':'bf'));
-            $pc=$st==='low'?'pfl':($st==='moderate'?'pfm':($st==='high'?'pfh':'pff'));
+            $st = strtolower($space->status);
+            $bc = $st==='low' ? 'bl' : ($st==='moderate' ? 'bm' : ($st==='high' ? 'bh' : 'bf'));
+            $pc = $st==='low' ? 'pfl' : ($st==='moderate' ? 'pfm' : ($st==='high' ? 'pfh' : 'pff'));
         @endphp
-        <div class="sc">
-            <div class="sth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div class="sc" style="animation-delay:{{ min($i * .06, .5) }}s">
+            <div class="sth">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </div>
             <div class="sbody">
                 <div class="sname">{{ $space->name }}</div>
                 <div class="smeta">
@@ -86,6 +170,6 @@
     </div>
 </div>
 @empty
-<div style="text-align:center;padding:60px;color:var(--muted);font-size:.9rem;">No campus spaces found.</div>
+<div style="text-align:center;padding:60px;color:var(--text-muted);font-size:.9rem;">No campus spaces found.</div>
 @endforelse
 @endsection

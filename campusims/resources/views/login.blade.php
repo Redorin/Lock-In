@@ -2,222 +2,235 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampuSIMS — Sign In</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>UDDSafeSpaces — Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --ease:cubic-bezier(.22,1,.36,1);
+            --ease-back:cubic-bezier(.34,1.56,.64,1);
+            --t:.22s;
+        }
+        html,body{min-height:100vh;font-family:'Inter',sans-serif;background:#f0f4f8;color:#0f172a;-webkit-font-smoothing:antialiased;}
 
-        :root {
-            --bg:           #091510;
-            --glass:        rgba(255,255,255,.04);
-            --glass-border: rgba(255,255,255,.08);
-            --accent:       #00e5a0;
-            --text:         #ddeee6;
-            --text-soft:    rgba(221,238,230,.55);
-            --text-muted:   rgba(221,238,230,.28);
-            --radius-lg:    22px;
-            --radius-md:    14px;
-            --radius-sm:    10px;
-            --danger:       #ff7070;
-        }
+        /* ── Page ── */
+        .page{min-height:100vh;display:flex;}
 
-        html, body {
-            min-height: 100vh;
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
+        /* ── Left panel ── */
+        .lpanel{
+            display:none;width:420px;flex-shrink:0;
+            background:linear-gradient(160deg,#0c1f5c 0%,#1e3a8a 45%,#2563eb 100%);
+            flex-direction:column;align-items:center;justify-content:center;
+            padding:56px 48px;position:relative;overflow:hidden;
         }
+        /* Decorative circles */
+        .lpanel::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;border:1px solid rgba(255,255,255,.06);pointer-events:none;}
+        .lpanel::after{content:'';position:absolute;bottom:-60px;left:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.03);pointer-events:none;}
+        .lp-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;}
 
-        body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            background:
-                radial-gradient(ellipse 70% 60% at 10% 10%,  rgba(0,229,160,.14) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 50% at 85% 85%,  rgba(124,111,247,.12) 0%, transparent 55%),
-                radial-gradient(ellipse 40% 35% at 60% 20%,  rgba(200,240,77,.06)  0%, transparent 50%);
+        .lp-seal-wrap{
+            width:160px;height:160px;border-radius:50%;
+            background:#fff;
+            padding:8px;
+            box-shadow:0 0 0 12px rgba(255,255,255,.08),0 20px 60px rgba(0,0,0,.4);
+            margin-bottom:32px;
+            animation:sealIn .8s var(--ease) both;
         }
+        @keyframes sealIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+        .lp-seal-wrap img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
 
-        body::after {
-            content: '';
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            background:
-                radial-gradient(circle 300px at 80% 20%, rgba(0,229,160,.06) 0%, transparent 70%),
-                radial-gradient(circle 200px at 20% 75%, rgba(124,111,247,.07) 0%, transparent 70%);
-        }
+        .lp-app{font-family:'Plus Jakarta Sans',sans-serif;font-size:2rem;font-weight:800;color:#fff;letter-spacing:-.6px;line-height:1.1;margin-bottom:8px;animation:fadeUp .7s .15s var(--ease) both;}
+        .lp-uni{font-size:.82rem;color:rgba(255,255,255,.5);letter-spacing:.05em;margin-bottom:24px;animation:fadeUp .7s .2s var(--ease) both;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-        .page {
-            position: relative; z-index: 1;
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 40px 20px;
-        }
+        .lp-divider{width:40px;height:2px;background:rgba(255,255,255,.15);border-radius:99px;margin:0 auto 28px;animation:fadeUp .7s .25s var(--ease) both;}
 
-        .auth-wrap { width: 100%; max-width: 420px; }
+        .lp-features{display:flex;flex-direction:column;gap:16px;width:100%;animation:fadeUp .7s .3s var(--ease) both;}
+        .lp-feat{display:flex;align-items:center;gap:14px;text-align:left;}
+        .lp-feat-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .lp-feat-icon svg{width:17px;height:17px;color:rgba(255,255,255,.8);}
+        .lp-feat-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;color:#fff;margin-bottom:2px;}
+        .lp-feat-sub{font-size:.76rem;color:rgba(255,255,255,.45);line-height:1.4;}
 
-        .brand {
-            display: flex; align-items: center; gap: 12px;
-            justify-content: center; margin-bottom: 36px;
-            text-decoration: none;
-        }
-        .brand-icon {
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, var(--accent), #00b87a);
-            border-radius: 13px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 24px rgba(0,229,160,.3);
-        }
-        .brand-icon svg { width: 22px; height: 22px; }
-        .brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -.4px; }
-        .brand-name span { color: var(--accent); }
+        /* ── Right panel ── */
+        .rpanel{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:#f0f4f8;position:relative;overflow:hidden;}
+        .rpanel::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.05) 0%,transparent 70%);pointer-events:none;}
+        .form-wrap{width:100%;max-width:400px;position:relative;z-index:1;}
 
-        .auth-card {
-            background: rgba(255,255,255,.04);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(24px);
-            padding: 40px 36px;
-            animation: cardIn .5s cubic-bezier(.22,1,.36,1) both;
-        }
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        /* Mobile brand */
+        .mob-brand{display:flex;align-items:center;gap:12px;margin-bottom:28px;justify-content:center;}
+        .mob-seal{width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid rgba(37,99,235,.2);background:#fff;box-shadow:0 2px 12px rgba(37,99,235,.12);}
+        .mob-seal img{width:100%;height:100%;object-fit:cover;display:block;}
+        .mob-app{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;color:#1e3a8a;letter-spacing:-.3px;}
+        .mob-uni{font-size:.7rem;color:#94a3b8;margin-top:2px;}
 
-        .auth-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
-        .auth-sub   { font-size: .85rem; color: var(--text-soft); margin-bottom: 28px; }
+        /* ── Form card ── */
+        .card{
+            background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;
+            padding:36px 32px;
+            box-shadow:0 4px 24px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.8);
+            animation:cardIn .6s var(--ease) both;
+        }
+        @keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-        .alert { padding: 11px 14px; border-radius: var(--radius-sm); font-size: .83rem; margin-bottom: 20px; }
-        .alert-danger  { background: rgba(255,112,112,.08); color: var(--danger); border: 1px solid rgba(255,112,112,.18); }
-        .alert-success { background: rgba(0,229,160,.08); color: var(--accent); border: 1px solid rgba(0,229,160,.18); }
+        .card-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;}
+        .card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.75rem;font-weight:800;letter-spacing:-.6px;color:#0f172a;margin-bottom:4px;}
+        .card-sub{font-size:.85rem;color:#94a3b8;margin-bottom:28px;}
 
-        .field { margin-bottom: 16px; }
-        .field-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
-        .field label {
-            display: block;
-            font-size: .71rem; font-weight: 600;
-            letter-spacing: .08em; text-transform: uppercase;
-            color: var(--text-muted);
-        }
-        .field-link {
-            font-size: .75rem; color: var(--text-muted); text-decoration: none;
-            border-bottom: 1px dashed rgba(221,238,230,.2); transition: color .15s;
-        }
-        .field-link:hover { color: var(--accent); }
+        /* Alerts */
+        .alert{padding:12px 14px;border-radius:12px;font-size:.83rem;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+        .alert svg{width:15px;height:15px;flex-shrink:0;}
+        .alert-danger{background:rgba(220,38,38,.06);color:#dc2626;border:1px solid rgba(220,38,38,.15);}
+        .alert-success{background:rgba(37,99,235,.06);color:#1e3a8a;border:1px solid rgba(37,99,235,.15);}
 
-        .field input {
-            width: 100%; padding: 12px 16px;
-            font-family: 'Outfit', sans-serif; font-size: .9rem;
-            background: rgba(255,255,255,.04);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--text); outline: none;
-            transition: border-color .2s, background .2s;
+        /* Fields */
+        .field{margin-bottom:16px;}
+        .fh{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+        .field label,.fh label{display:block;font-size:.71rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#64748b;}
+        .fl{font-size:.75rem;color:#94a3b8;text-decoration:none;transition:color var(--t) var(--ease);}
+        .fl:hover{color:#2563eb;}
+        .input-wrap{position:relative;}
+        .field input{
+            width:100%;padding:12px 14px;
+            font-family:'Inter',sans-serif;font-size:.9rem;
+            background:#f8fafc;border:1.5px solid rgba(0,0,0,.1);
+            border-radius:10px;color:#0f172a;outline:none;
+            transition:all var(--t) var(--ease);
         }
-        .field input::placeholder { color: var(--text-muted); }
-        .field input:focus { border-color: rgba(0,229,160,.4); background: rgba(0,229,160,.03); }
-        .field input.is-invalid { border-color: rgba(255,112,112,.4); }
-        .invalid-feedback { font-size: .77rem; color: var(--danger); margin-top: 5px; }
+        .field input::placeholder{color:#cbd5e1;}
+        .field input:focus{
+            border-color:#2563eb;background:#fff;
+            box-shadow:0 0 0 3px rgba(37,99,235,.1);
+        }
+        .field input.is-invalid{border-color:#dc2626;}
+        .invalid-feedback{font-size:.77rem;color:#dc2626;margin-top:5px;}
 
-        .remember-row {
-            display: flex; align-items: center; gap: 8px;
-            margin: 4px 0 20px;
-        }
-        .remember-row input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
-        .remember-row label { font-size: .83rem; color: var(--text-soft); cursor: pointer; }
+        /* Remember me */
+        .rem{display:flex;align-items:center;gap:9px;margin:2px 0 20px;}
+        .custom-cb{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(0,0,0,.15);background:#f8fafc;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--t) var(--ease);}
+        .custom-cb.checked{background:#2563eb;border-color:#2563eb;}
+        .custom-cb svg{width:10px;height:10px;color:#fff;opacity:0;transition:opacity .15s;}
+        .custom-cb.checked svg{opacity:1;}
+        .rem label{font-size:.84rem;color:#475569;cursor:pointer;user-select:none;}
+        input[type=checkbox].hidden-cb{display:none;}
 
-        .btn-submit {
-            width: 100%; padding: 13px;
-            background: var(--accent); color: #091510;
-            font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem;
-            border: none; border-radius: var(--radius-md); cursor: pointer;
-            box-shadow: 0 4px 24px rgba(0,229,160,.25);
-            transition: opacity .18s, transform .15s;
+        /* Submit */
+        .sbtn{
+            width:100%;padding:13px;
+            background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 60%,#3b82f6 100%);
+            color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;
+            border:none;border-radius:11px;cursor:pointer;
+            box-shadow:0 4px 20px rgba(37,99,235,.3),inset 0 1px 0 rgba(255,255,255,.2);
+            transition:all var(--t) var(--ease);
+            letter-spacing:.01em;
+            position:relative;overflow:hidden;
         }
-        .btn-submit:hover  { opacity: .88; transform: translateY(-1px); }
-        .btn-submit:active { transform: translateY(0); }
+        .sbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);pointer-events:none;}
+        .sbtn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(37,99,235,.35);}
+        .sbtn:active{transform:translateY(0);box-shadow:0 2px 12px rgba(37,99,235,.25);}
 
-        .auth-footer {
-            text-align: center; margin-top: 22px;
-            font-size: .85rem; color: var(--text-muted);
-        }
-        .auth-footer a {
-            color: var(--accent); font-weight: 600; text-decoration: none;
-            border-bottom: 1px solid rgba(0,229,160,.3);
-        }
-        .auth-footer a:hover { border-color: var(--accent); }
+        /* Footer */
+        .auth-footer{text-align:center;margin-top:20px;font-size:.85rem;color:#94a3b8;}
+        .auth-footer a{color:#2563eb;font-weight:600;text-decoration:none;transition:color var(--t) var(--ease);}
+        .auth-footer a:hover{color:#1d4ed8;}
+
+        @media(min-width:900px){.lpanel{display:flex;}.mob-brand{display:none;}}
+        @media(max-width:460px){.card{padding:28px 20px;}.card-title{font-size:1.5rem;}}
     </style>
 </head>
 <body>
 <div class="page">
-    <div class="auth-wrap">
 
-        <a href="/" class="brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 20 20" fill="none">
-                    <path d="M10 2L3 6v8l7 4 7-4V6L10 2z" fill="#091510"/>
-                    <path d="M10 2v12M3 6l7 4 7-4" stroke="#091510" stroke-width="1.5"/>
-                </svg>
+    {{-- Left panel --}}
+    <div class="lpanel">
+        <div class="lp-inner">
+            <div class="lp-seal-wrap">
+                <img src="{{ asset('storage/udd-logo.jpg') }}" alt="Universidad de Dagupan"
+                     onerror="this.style.display='none'">
             </div>
-            <span class="brand-name">Campu<span>SIMS</span></span>
-        </a>
-
-        <div class="auth-card">
-            <h1 class="auth-title">Welcome back.</h1>
-            <p class="auth-sub">Sign in to your CampuSIMS account.</p>
-
-            {{-- Success message from registration --}}
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
-
-            @if($errors->any())
-                <div class="alert alert-danger">{{ $errors->first() }}</div>
-            @endif
-
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-
-                <div class="field">
-                    <label for="email">Email address</label>
-                    <input type="email" id="email" name="email"
-                           value="{{ old('email') }}" placeholder="you@school.edu"
-                           autocomplete="email"
-                           class="{{ $errors->has('email') ? 'is-invalid' : '' }}" required>
-                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <div class="lp-app">UDDSafeSpaces</div>
+            <div class="lp-uni">Universidad de Dagupan</div>
+            <div class="lp-divider"></div>
+            <div class="lp-features">
+                <div class="lp-feat">
+                    <div class="lp-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+                    <div><div class="lp-feat-title">Live Space Monitoring</div><div class="lp-feat-sub">Real-time occupancy tracking across all campus buildings.</div></div>
                 </div>
-
-                <div class="field">
-                    <div class="field-header">
-                        <label for="password">Password</label>
-                        <a href="{{ route('password.request') }}" class="field-link">Forgot?</a>
-                    </div>
-                    <input type="password" id="password" name="password"
-                           placeholder="••••••••" autocomplete="current-password"
-                           class="{{ $errors->has('password') ? 'is-invalid' : '' }}" required>
-                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                <div class="lp-feat">
+                    <div class="lp-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><line x1="16" y1="16" x2="21" y2="21"/></svg></div>
+                    <div><div class="lp-feat-title">QR Check-In System</div><div class="lp-feat-sub">Daily-rotating QR codes for secure and fast check-ins.</div></div>
                 </div>
-
-                <div class="remember-row">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Keep me signed in</label>
+                <div class="lp-feat">
+                    <div class="lp-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <div><div class="lp-feat-title">Secure &amp; Verified</div><div class="lp-feat-sub">Admin-reviewed accounts keep the system safe and reliable.</div></div>
                 </div>
-
-                <button type="submit" class="btn-submit">Sign In →</button>
-            </form>
+            </div>
         </div>
+    </div>
 
-        <p class="auth-footer">
-            Don't have an account? <a href="{{ route('register') }}">Create one</a>
-        </p>
+    {{-- Right form --}}
+    <div class="rpanel">
+        <div class="form-wrap">
+            <div class="mob-brand">
+                <div class="mob-seal"><img src="{{ asset('storage/udd-logo.jpg') }}" alt="UDD"></div>
+                <div><div class="mob-app">UDDSafeSpaces</div><div class="mob-uni">Universidad de Dagupan</div></div>
+            </div>
 
+            <div class="card">
+                <div class="card-eyebrow">Student &amp; Admin Portal</div>
+                <h1 class="card-title">Welcome back.</h1>
+                <p class="card-sub">Sign in to continue to UDDSafeSpaces.</p>
+
+                @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
+                @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
+                @if($errors->any())<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ $errors->first() }}</div>@endif
+
+                <form method="POST" action="{{ route('login.post') }}">
+                    @csrf
+                    <div class="field">
+                        <label>Email address</label>
+                        <input type="email" name="email" value="{{ old('email') }}"
+                               placeholder="you@udd.edu.ph"
+                               class="{{ $errors->has('email') ? 'is-invalid' : '' }}" required>
+                        @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="field">
+                        <div class="fh">
+                            <label>Password</label>
+                            <a href="{{ route('password.request') }}" class="fl">Forgot password?</a>
+                        </div>
+                        <input type="password" name="password" placeholder="••••••••"
+                               class="{{ $errors->has('password') ? 'is-invalid' : '' }}" required>
+                        @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="rem">
+                        <div class="custom-cb" id="cbWrap" onclick="toggleCb()">
+                            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg>
+                        </div>
+                        <input type="checkbox" name="remember" id="remember" class="hidden-cb">
+                        <label for="remember" onclick="toggleCb()">Keep me signed in</label>
+                    </div>
+
+                    <button type="submit" class="sbtn">Sign In →</button>
+                </form>
+            </div>
+
+            <p class="auth-footer">
+                Don't have an account? <a href="{{ route('register') }}">Create one</a>
+            </p>
+        </div>
     </div>
 </div>
+
+<script>
+function toggleCb(){
+    const cb=document.getElementById('remember');
+    const wrap=document.getElementById('cbWrap');
+    cb.checked=!cb.checked;
+    wrap.classList.toggle('checked',cb.checked);
+}
+</script>
 </body>
 </html>
