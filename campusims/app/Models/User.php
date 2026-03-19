@@ -58,4 +58,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Student::class);
     }
+
+    public function checkIns()
+    {
+        return $this->hasMany(CheckIn::class);
+    }
+
+    public function activeCheckIn()
+    {
+        return $this->hasOne(CheckIn::class)->whereNull('checked_out_at')->latest();
+    }
 }
