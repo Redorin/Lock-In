@@ -58,14 +58,7 @@ class Controller extends \Illuminate\Routing\Controller
                 ->withErrors(['email' => 'Your account is pending admin approval. Please wait.']);
         }
 
-        // Rejected
-        if ($user->isRejected()) {
-            $reason = $user->rejection_reason
-                ? "Your registration was rejected. Reason: {$user->rejection_reason}. Please contact the admin."
-                : 'Your registration was rejected. Please contact the admin.';
-            return back()->withInput($request->only('email'))
-                ->withErrors(['email' => $reason]);
-        }
+
 
         // Deactivated
         if (!$user->is_active) {

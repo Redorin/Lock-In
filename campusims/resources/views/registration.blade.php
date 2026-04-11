@@ -24,7 +24,7 @@
             --danger-bg:rgba(220,38,38,.07);
             --danger-border:rgba(220,38,38,.2);
         }
-        html,body{height:100%;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+        html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
 
         /* ── Page shell ── */
         .page{min-height:100vh;display:flex;}
@@ -111,10 +111,10 @@
         .section-box{
             background:var(--surface);
             border:1px solid var(--border);
-            border-radius:16px;
-            padding:24px;
+            border-radius:24px;
+            padding:32px;
             margin-bottom:16px;
-            box-shadow:0 2px 10px rgba(0,0,0,.05);
+            box-shadow:0 8px 32px rgba(0,0,0,.04);
         }
 
         /* ── Fields ── */
@@ -126,11 +126,11 @@
             color:var(--text-soft);margin-bottom:7px;
         }
         .field input{
-            width:100%;padding:12px 15px;
-            font-family:'Outfit',sans-serif;font-size:.93rem;
+            width:100%;padding:14px 16px;
+            font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:600;
             background:var(--surface2);
             border:1.5px solid var(--border2);
-            border-radius:10px;color:var(--text);outline:none;
+            border-radius:14px;color:var(--text);outline:none;
             transition:border-color .2s,box-shadow .2s,background .2s;
         }
         .field input::placeholder{color:var(--text-muted);}
@@ -213,14 +213,14 @@
         .sbtn{
             width:100%;padding:14px;
             background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);
-            color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;
-            border:none;border-radius:12px;cursor:pointer;
+            color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;
+            border:none;border-radius:99px;cursor:pointer;
             box-shadow:0 4px 20px rgba(30,58,138,.25);
             transition:opacity .18s,transform .15s,box-shadow .18s;
             letter-spacing:.01em;
         }
-        .sbtn:hover{opacity:.93;transform:translateY(-1px);box-shadow:0 6px 24px rgba(30,58,138,.3);}
-        .sbtn:active{transform:translateY(0);}
+        .sbtn:hover{opacity:.93;transform:translateY(-2px);box-shadow:0 6px 28px rgba(30,58,138,.35);}
+        .sbtn:active{transform:translateY(0) scale(.98);}
 
         /* Review notice */
         .notice{

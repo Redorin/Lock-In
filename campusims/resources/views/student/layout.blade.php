@@ -15,13 +15,13 @@
             --t: .22s;
         }
         [data-theme="dark"] {
-            --bg: #030712;
-            --bg2: #060d1a;
-            --surface: rgba(255,255,255,.04);
-            --surface2: rgba(255,255,255,.07);
-            --surface3: rgba(255,255,255,.10);
-            --border: rgba(255,255,255,.07);
-            --border2: rgba(255,255,255,.12);
+            --bg: #0b1120;
+            --bg2: #0f172a;
+            --surface: rgba(30, 41, 59, 0.4);
+            --surface2: rgba(30, 41, 59, 0.7);
+            --surface3: rgba(51, 65, 85, 0.5);
+            --border: rgba(255,255,255,.05);
+            --border2: rgba(255,255,255,.1);
             --text: #f1f5f9;
             --text-soft: #94a3b8;
             --text-muted: #475569;
@@ -39,9 +39,9 @@
             --warn-border: rgba(251,191,36,.2);
             --success: #4ade80;
             --success-bg: rgba(74,222,128,.08);
-            --sidebar: rgba(3,7,18,.8);
-            --drawer: #060d1a;
-            --modal: #0a0f1e;
+            --sidebar: rgba(15, 23, 42, 0.6);
+            --drawer: #0f172a;
+            --modal: rgba(15, 23, 42, 0.85);
             --overlay: rgba(0,0,0,.7);
             --inset: inset 0 1px 0 rgba(255,255,255,.06);
             --shadow-sm: 0 2px 8px rgba(0,0,0,.3);
@@ -111,22 +111,23 @@
            DESKTOP SIDEBAR
         ═══════════════════════════════════════════ */
         .desktop-sidebar {
-            position:fixed;top:0;left:0;bottom:0;width:68px;z-index:100;
+            position:fixed;top:24px;left:24px;bottom:24px;width:78px;z-index:100;
             background:var(--sidebar);
-            border-right:1px solid var(--border);
+            border:1px solid var(--border);
+            border-radius:28px;
             backdrop-filter:blur(32px) saturate(180%);
             -webkit-backdrop-filter:blur(32px) saturate(180%);
             display:flex;flex-direction:column;align-items:center;
-            padding:16px 0;
+            padding:24px 0;
             transition:background var(--t) var(--ease), border-color var(--t) var(--ease);
-            box-shadow:var(--shadow-sm);
+            box-shadow:var(--shadow-lg), var(--inset);
         }
 
         .s-logo {
-            width:40px;height:40px;border-radius:12px;
+            width:44px;height:44px;border-radius:14px;
             overflow:hidden;
             display:flex;align-items:center;justify-content:center;
-            margin-bottom:24px;text-decoration:none;
+            margin-bottom:32px;text-decoration:none;
             flex-shrink:0;
             box-shadow:0 4px 16px var(--accent-glow);
             transition:transform var(--t) var(--ease-back), box-shadow var(--t) var(--ease);
@@ -137,20 +138,20 @@
         .s-nav { display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;width:100%;padding:0 10px; }
 
         .ni {
-            width:46px;height:46px;border-radius:12px;
+            width:48px;height:48px;border-radius:50%; /* fully rounded */
             display:flex;align-items:center;justify-content:center;
             text-decoration:none;color:var(--text-muted);
             position:relative;
             transition:background var(--t) var(--ease), color var(--t) var(--ease), transform var(--t) var(--ease-back);
         }
-        .ni svg { width:19px;height:19px; transition:transform var(--t) var(--ease-back); }
+        .ni svg { width:20px;height:20px; transition:transform var(--t) var(--ease-back); }
         .ni:hover { background:var(--surface2); color:var(--text-soft); transform:scale(1.06); }
         .ni:hover svg { transform:scale(1.1); }
-        .ni.active { background:var(--accent-bg); color:var(--accent2); }
+        .ni.active { background:var(--surface2); color:var(--accent2); box-shadow:var(--inset); }
         .ni.active::before {
-            content:'';position:absolute;left:-10px;
-            width:3px;height:20px;background:var(--accent);
-            border-radius:0 3px 3px 0;
+            content:'';position:absolute;left:-8px;
+            width:4px;height:24px;background:var(--accent);
+            border-radius:99px;
             box-shadow:0 0 12px var(--accent-glow);
         }
         .ni .tip {
@@ -222,26 +223,27 @@
         /* ═══════════════════════════════════════════
            DESKTOP MAIN
         ═══════════════════════════════════════════ */
-        .desktop-main { margin-left:68px;min-height:100vh;position:relative;z-index:1; }
+        .desktop-main { margin-left:110px;min-height:100vh;position:relative;z-index:1; }
         .desktop-topbar {
-            display:flex;align-items:center;justify-content:space-between;
+            display:flex;align-items:center;justify-content:flex-end; /* Right align the greeting */
             padding:24px 32px 0;gap:16px;flex-wrap:wrap;
         }
-        .topbar-title h1 {
-            font-family:'Plus Jakarta Sans',sans-serif;
-            font-size:1.6rem;font-weight:800;letter-spacing:-.5px;color:var(--text);
-        }
-        .topbar-title p { font-size:.83rem;color:var(--text-soft);margin-top:2px; }
-        .topbar-right { display:flex;align-items:center;gap:10px; }
+        .topbar-right { display:flex;align-items:center;gap:12px; }
         .gpill {
-            display:flex;align-items:center;gap:8px;
-            background:var(--surface);border:1px solid var(--border2);
-            border-radius:99px;padding:7px 16px 7px 10px;
-            font-size:.82rem;color:var(--text-soft);
-            box-shadow:var(--shadow-sm);
+            display:flex;align-items:center;gap:12px;
+            background:var(--surface);border:1px solid var(--border);
+            border-radius:99px;padding:6px 16px 6px 6px;
+            font-size:.9rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--text);
+            box-shadow:var(--shadow-sm), var(--inset);
             transition:all var(--t) var(--ease);
         }
         .gpill:hover { border-color:var(--accent-border); }
+        .gpill .g-av {
+            width:34px;height:34px;border-radius:50%;
+            background:linear-gradient(135deg, var(--accent), #6366f1);
+            display:flex;align-items:center;justify-content:center;
+            font-size:.7rem;font-weight:800;color:#fff;
+        }
         .pdot {
             width:7px;height:7px;border-radius:50%;background:var(--accent);
             box-shadow:0 0 0 0 var(--accent-glow);
@@ -562,15 +564,19 @@
 {{-- DESKTOP MAIN --}}
 <div class="desktop-main">
     <div class="desktop-topbar">
-        <div class="topbar-title">
-            <h1>@yield('page-title')</h1>
-            <p>@yield('page-sub')</p>
-        </div>
+        <!-- Replaced standard static title with isolated Search approach in next view -->
         <div class="topbar-right">
-            <div class="gpill"><span class="pdot"></span>Hi, {{ explode(' ',auth()->user()->name)[0] }}!</div>
+            <div class="gpill">
+                <div class="g-av">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
+                Hi, {{ explode(' ',auth()->user()->name)[0] }}!
+            </div>
         </div>
     </div>
     <div class="desktop-content page-in">
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-.5px;color:var(--text);">@yield('page-title')</h1>
+            <p style="font-size:.9rem;color:var(--text-soft);margin-top:2px;">@yield('page-sub')</p>
+        </div>
         @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
         @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
         @yield('content')
@@ -674,6 +680,7 @@ function sc(){cd=60;document.getElementById('tb').classList.add('show');ci=setIn
 setInterval(()=>{rem--;if(rem<=60&&!warned){warned=true;sc();}if(rem<=0)(document.getElementById('lf-desktop')||document.querySelector('form[action*="logout"]')).submit();},1000);
 ['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,rt,{passive:true}));
 </script>
+@yield('modals')
 @yield('scripts')
 </body>
 </html>

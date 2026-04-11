@@ -32,7 +32,7 @@
                 @foreach($pending as $u)
                 <tr>
                     <td>@if($u->id_image)<img class="ith" src="{{ asset('storage/id_images/'.$u->id_image) }}" onclick="openLb('{{ asset('storage/id_images/'.$u->id_image) }}')" alt="">@else<div class="iph">No img</div>@endif</td>
-                    <td style="color:var(--white);font-weight:600;">{{ $u->name }}</td>
+                    <td style="color:var(--text);font-weight:600;">{{ $u->name }}</td>
                     <td><span style="font-family:monospace;color:var(--accent2);font-size:.85rem;">{{ $u->student_id }}</span></td>
                     <td>{{ $u->email }}</td>
                     <td style="font-size:.78rem;">{{ $u->created_at->format('M d, Y') }}</td>
@@ -64,7 +64,7 @@
             <tbody>
                 @foreach($rejected as $u)
                 <tr>
-                    <td style="color:var(--white);font-weight:600;">{{ $u->name }}</td>
+                    <td style="color:var(--text);font-weight:600;">{{ $u->name }}</td>
                     <td><span style="font-family:monospace;color:var(--danger);font-size:.85rem;">{{ $u->student_id }}</span></td>
                     <td>{{ $u->email }}</td>
                     <td style="color:var(--danger);font-size:.82rem;max-width:220px;">{{ $u->rejection_reason ?? '—' }}</td>

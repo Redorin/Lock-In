@@ -7,14 +7,14 @@
 <style>
     .sg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px;}
     .sc{
-        background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;
-        box-shadow:var(--shadow-sm),var(--inset);
+        background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:22px 24px;
+        box-shadow:var(--shadow-md),var(--inset);
         animation:statIn .5s var(--ease) both;
         transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease),background var(--t) var(--ease);
         position:relative;overflow:hidden;cursor:default;
     }
     .sc::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-bg),transparent);opacity:0;transition:opacity var(--t) var(--ease);}
-    .sc:hover{transform:translateY(-3px);box-shadow:var(--shadow-md),var(--inset);}
+    .sc:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg),var(--inset);}
     .sc:hover::after{opacity:1;}
     .sc:nth-child(1){animation-delay:.04s}.sc:nth-child(2){animation-delay:.08s}.sc:nth-child(3){animation-delay:.12s}.sc:nth-child(4){animation-delay:.16s}.sc:nth-child(5){animation-delay:.2s}
     @keyframes statIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}

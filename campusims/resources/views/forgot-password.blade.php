@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{min-height:100vh;font-family:'Inter',sans-serif;background:#f0f4f8;color:#0f172a;-webkit-font-smoothing:antialiased;}
+        html,body{min-height:100vh;font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f8;color:#0f172a;-webkit-font-smoothing:antialiased;}
         .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:#f0f4f8;position:relative;overflow:hidden;}
         .page::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.06) 0%,transparent 70%);pointer-events:none;}
         .page::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.04) 0%,transparent 70%);pointer-events:none;}
@@ -20,7 +20,7 @@
         .brand-uni{font-size:.7rem;color:#94a3b8;margin-top:2px;}
 
         /* Card */
-        .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.8);animation:cardIn .5s cubic-bezier(.22,1,.36,1) both;}
+        .card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:32px;padding:40px 36px;box-shadow:0 8px 48px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.8);animation:cardIn .5s cubic-bezier(.22,1,.36,1) both;}
         @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         .card-icon{width:52px;height:52px;border-radius:14px;background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.15);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
         .card-icon svg{width:24px;height:24px;color:#2563eb;}
@@ -44,15 +44,15 @@
         /* Fields */
         .field{margin-bottom:16px;}
         .field label{display:block;font-size:.71rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#64748b;margin-bottom:7px;}
-        .field input{width:100%;padding:12px 14px;font-family:'Inter',sans-serif;font-size:.9rem;background:#f8fafc;border:1.5px solid rgba(0,0,0,.1);border-radius:10px;color:#0f172a;outline:none;transition:all .2s;}
+        .field input{width:100%;padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:600;background:#f8fafc;border:1.5px solid rgba(0,0,0,.08);border-radius:14px;color:#0f172a;outline:none;transition:all .2s;}
         .field input::placeholder{color:#cbd5e1;}
-        .field input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+        .field input:focus{border-color:#2563eb;background:#ffffff;box-shadow:0 0 0 4px rgba(37,99,235,.15);}
 
         /* Submit */
-        .sbtn{width:100%;padding:13px;background:linear-gradient(135deg,#1e3a8a,#2563eb,#3b82f6);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;border:none;border-radius:11px;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,.3);transition:all .2s;position:relative;overflow:hidden;}
+        .sbtn{width:100%;padding:14px;background:linear-gradient(135deg,#1e3a8a,#2563eb,#3b82f6);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;border:none;border-radius:99px;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,.3);transition:all .2s;position:relative;overflow:hidden;}
         .sbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);pointer-events:none;}
-        .sbtn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(37,99,235,.35);}
-        .sbtn:active{transform:translateY(0);}
+        .sbtn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(37,99,235,.35);}
+        .sbtn:active{transform:translateY(0) scale(.98);}
 
         /* Footer */
         .auth-footer{text-align:center;margin-top:20px;font-size:.85rem;color:#94a3b8;}

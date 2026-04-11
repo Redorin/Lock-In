@@ -27,7 +27,7 @@
                 @forelse($spaces as $s)
                 <tr>
                     <td>{{ $s->building }}</td>
-                    <td style="color:var(--white);font-weight:500;">{{ $s->name }}</td>
+                    <td style="color:var(--text);font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;">{{ $s->name }}</td>
                     <td>{{ $s->capacity }}</td>
                     <td>{{ $s->current_occupancy }}</td>
                     <td><span class="sbadge {{ in_array($s->status,['LOW','MODERATE'])?'sa':'si' }}">{{ $s->status }}</span></td>
@@ -36,7 +36,7 @@
                             <button class="btn btn-ghost" onclick="openEdit({{ $s->id }},'{{ addslashes($s->building) }}','{{ addslashes($s->name) }}',{{ $s->capacity }},{{ $s->current_occupancy }})">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
                             </button>
-                            <form method="POST" action="{{ route('admin.spaces.destroy',$s) }}" onsubmit="return confirm('Delete {{ addslashes($s->name) }}?')">
+                            <form method="POST" action="javascript:void(0)" onsubmit="cd('{{ route('admin.spaces.destroy',$s) }}', 'Delete {{ addslashes($s->name) }}?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</button>
                             </form>
@@ -50,6 +50,9 @@
     </div>
 </div></div>
 
+@endsection
+
+@section('modals')
 <div class="modal-overlay" id="addM"><div class="modal">
     <div class="modal-title">Add New Space</div>
     <div class="modal-sub">Fill in the details for the new campus space.</div>

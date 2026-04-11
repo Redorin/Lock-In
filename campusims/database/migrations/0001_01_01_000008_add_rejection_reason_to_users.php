@@ -9,8 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text('rejection_reason')->nullable()->after('status');
-            $table->boolean('is_active')->default(true)->after('rejection_reason');
+            if (!Schema::hasColumn('users', 'rejection_reason')) {
+                $table->text('rejection_reason')->nullable()->after('status');
+            }
+            if (!Schema::hasColumn('users', 'is_active')) {
+                $table->boolean('is_active')->default(true)->after('rejection_reason');
+            }
         });
     }
 

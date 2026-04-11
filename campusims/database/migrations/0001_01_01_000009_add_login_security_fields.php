@@ -11,8 +11,12 @@ return new class extends Migration
         // Only add login tracking columns — password_reset_tokens already
         // exists from Laravel's default migrations
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('login_attempts')->default(0)->after('is_active');
-            $table->timestamp('locked_until')->nullable()->after('login_attempts');
+            if (!Schema::hasColumn('users', 'login_attempts')) {
+                $table->integer('login_attempts')->default(0)->after('is_active');
+            }
+            if (!Schema::hasColumn('users', 'locked_until')) {
+                $table->timestamp('locked_until')->nullable()->after('login_attempts');
+            }
         });
     }
 

@@ -33,13 +33,19 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [Controller::class, 'logout'])->name('logout')->middleware('auth');
 
 // ── Student ───────────────────────────────────────────────────────────────────
-Route::middleware('auth')->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\RedirectIfRejected::class])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/map',       [StudentDashboardController::class, 'map'])->name('map');
     Route::get('/id-card',   [StudentDashboardController::class, 'idCard'])->name('id-card');
     Route::get('/settings',  [StudentDashboardController::class, 'settings'])->name('settings');
     Route::patch('/settings',[StudentDashboardController::class, 'updateSettings'])->name('settings.update');
     Route::get('/scanner',   [CheckInController::class, 'scannerPage'])->name('scanner');
+});
+
+// ── Resubmit Portal (For Rejected Students) ───────────────────────────────────
+Route::middleware(['auth', \App\Http\Middleware\EnsureRejected::class])->prefix('student')->name('student.')->group(function () {
+    Route::get('/resubmit',  [StudentDashboardController::class, 'resubmitPage'])->name('resubmit');
+    Route::post('/resubmit', [StudentDashboardController::class, 'processResubmit'])->name('resubmit.post');
 });
 
 // ── Check-in (auth required) ──────────────────────────────────────────────────

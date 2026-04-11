@@ -23,7 +23,7 @@
                         <div style="display:flex;align-items:center;gap:10px;">
                             <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4f9cf9,#1a6fe8);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0;">{{ strtoupper(substr($a->name,0,1)) }}</div>
                             <div>
-                                <div style="font-weight:600;color:var(--white);font-size:.9rem;">{{ $a->name }}</div>
+                                <div style="font-weight:600;color:var(--text);font-size:.9rem;">{{ $a->name }}</div>
                                 @if($a->id===auth()->id())<div style="font-size:.68rem;color:var(--accent2);font-weight:600;">You</div>@endif
                             </div>
                         </div>

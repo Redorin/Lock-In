@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>UDDSafeSpaces Admin — @yield('title')</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --ease:cubic-bezier(.22,1,.36,1);--ease-back:cubic-bezier(.34,1.56,.64,1);--t:.22s; }
         [data-theme="dark"] {
@@ -33,12 +33,12 @@
             --success:#16a34a;--success-bg:rgba(22,163,74,.07);
             --sidebar:rgba(255,255,255,.92);--drawer:#ffffff;--modal:#ffffff;--overlay:rgba(0,0,0,.45);
             --inset:inset 0 1px 0 rgba(255,255,255,.8);
-            --shadow-sm:0 2px 8px rgba(0,0,0,.06);--shadow-md:0 8px 24px rgba(0,0,0,.08);--shadow-lg:0 20px 48px rgba(0,0,0,.1);
+            --shadow-sm:0 4px 16px rgba(0,0,0,.05);--shadow-md:0 12px 32px rgba(0,0,0,.08);--shadow-lg:0 32px 64px rgba(0,0,0,.15),0 8px 24px rgba(0,0,0,.1);
         }
 
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html{background:var(--bg);}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;transition:background var(--t) var(--ease),color var(--t) var(--ease);}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;transition:background var(--t) var(--ease),color var(--t) var(--ease);}
         body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 10% 10%,var(--accent-bg) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 80%,rgba(139,92,246,.06) 0%,transparent 60%);}
 
         /* Sidebar */
@@ -135,8 +135,8 @@
         .d-logout svg{width:17px;height:17px;}
 
         /* Shared */
-        .gc{background:var(--surface);border:1px solid var(--border);border-radius:20px;backdrop-filter:blur(12px);box-shadow:var(--shadow-sm),var(--inset);transition:background var(--t) var(--ease),border-color var(--t) var(--ease);}
-        .gci{padding:24px;}
+        .gc{background:var(--surface);border:1px solid var(--border);border-radius:32px;backdrop-filter:blur(12px);box-shadow:var(--shadow-sm),var(--inset);transition:background var(--t) var(--ease),border-color var(--t) var(--ease);}
+        .gci{padding:32px;}
         .ct{font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--text);}
         .ctl{flex:1;height:1px;background:var(--border);min-width:20px;}
         .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -145,7 +145,7 @@
         .dt td{padding:13px 14px;font-size:.85rem;color:var(--text-soft);border-bottom:1px solid var(--border);vertical-align:middle;transition:background var(--t) var(--ease);}
         .dt tr:last-child td{border-bottom:none;}
         .dt tr:hover td{background:var(--surface2);}
-        .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:opacity var(--t) var(--ease),transform var(--t) var(--ease-back),box-shadow var(--t) var(--ease);text-decoration:none;white-space:nowrap;}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;border:none;cursor:pointer;transition:opacity var(--t) var(--ease),transform var(--t) var(--ease-back),box-shadow var(--t) var(--ease);text-decoration:none;white-space:nowrap;}
         .btn:hover{opacity:.85;transform:translateY(-1px);}
         .btn:active{transform:translateY(0) scale(.98);}
         .btn svg{width:12px;height:12px;}
@@ -161,14 +161,14 @@
         .alert-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
         .field{margin-bottom:14px;}
         .field label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
-        .field input,.field select,.field textarea{width:100%;padding:10px 14px;font-family:'Inter',sans-serif;font-size:.875rem;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);outline:none;transition:border-color var(--t) var(--ease),box-shadow var(--t) var(--ease),background var(--t) var(--ease);}
+        .field input,.field select,.field textarea{width:100%;padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;background:var(--surface2);border:1.5px solid var(--border2);border-radius:14px;color:var(--text);outline:none;transition:border-color var(--t) var(--ease),box-shadow var(--t) var(--ease),background var(--t) var(--ease);}
         .field input::placeholder,.field textarea::placeholder{color:var(--text-muted);}
         .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-bg);}
         .field select option{background:var(--modal);color:var(--text);}
         .field textarea{resize:vertical;min-height:80px;}
         .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:var(--overlay);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px;}
         .modal-overlay.open{display:flex;}
-        .modal{background:var(--modal);border:1px solid var(--border2);border-radius:20px;padding:28px;width:100%;max-width:440px;animation:modalIn .3s var(--ease) both;box-shadow:var(--shadow-lg),var(--inset);max-height:90vh;overflow-y:auto;}
+        .modal{background:var(--modal);border:1px solid var(--border2);border-radius:32px;padding:36px;width:100%;max-width:480px;animation:modalIn .3s var(--ease) both;box-shadow:var(--shadow-lg),var(--inset);max-height:90vh;overflow-y:auto;}
         @keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
         .modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:6px;color:var(--text);}
         .modal-sub{font-size:.83rem;color:var(--text-soft);margin-bottom:20px;}
@@ -183,10 +183,10 @@
         .search-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
         .siw{position:relative;flex:1;min-width:160px;}
         .siw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);pointer-events:none;}
-        .si-inp{width:100%;padding:9px 14px 9px 36px;font-family:'Inter',sans-serif;font-size:.875rem;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);outline:none;transition:all var(--t) var(--ease);}
+        .si-inp{width:100%;padding:12px 16px 12px 36px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;color:var(--text);outline:none;transition:all var(--t) var(--ease);}
         .si-inp::placeholder{color:var(--text-muted);}
         .si-inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
-        .fsel{padding:9px 14px;font-family:'Inter',sans-serif;font-size:.875rem;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);outline:none;cursor:pointer;transition:all var(--t) var(--ease);}
+        .fsel{padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;color:var(--text);outline:none;cursor:pointer;transition:all var(--t) var(--ease);}
         .fsel option{background:var(--modal);color:var(--text);}
         .fsel:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
         .t-banner{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--surface);border:1px solid var(--warn-border);border-radius:16px;padding:16px 20px;box-shadow:var(--shadow-lg);max-width:300px;backdrop-filter:blur(16px);}
@@ -325,6 +325,31 @@ function sc(){cd=60;document.getElementById('tb').classList.add('show');ci=setIn
 setInterval(()=>{rem--;if(rem<=60&&!warned){warned=true;sc();}if(rem<=0)(document.getElementById('lf-desktop')||document.querySelector('form[action*="logout"]')).submit();},1000);
 ['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,rt,{passive:true}));
 </script>
+@yield('modals')
+
+<div class="modal-overlay" id="globalDeleteModal"><div class="modal" style="max-width:400px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:16px;background:var(--danger-bg);border:1px solid var(--danger-border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--danger);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:28px;height:28px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+    </div>
+    <div class="modal-title">Confirm Deletion</div>
+    <div class="modal-sub" id="gdelMsg" style="margin-bottom:28px;">Are you sure you want to delete this item?</div>
+    <form method="POST" id="gdelForm">
+        @csrf @method('DELETE')
+        <div class="modal-actions">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <button type="button" class="btn btn-ghost" onclick="document.getElementById('globalDeleteModal').classList.remove('open')">Cancel</button>
+        </div>
+    </form>
+</div></div>
+
+<script>
+function cd(r,m) {
+    document.getElementById('gdelForm').action = r;
+    document.getElementById('gdelMsg').textContent = m;
+    document.getElementById('globalDeleteModal').classList.add('open');
+}
+</script>
+
 @yield('scripts')
 </body>
 </html>

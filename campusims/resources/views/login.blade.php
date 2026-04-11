@@ -12,7 +12,7 @@
             --ease-back:cubic-bezier(.34,1.56,.64,1);
             --t:.22s;
         }
-        html,body{min-height:100vh;font-family:'Inter',sans-serif;background:#f0f4f8;color:#0f172a;-webkit-font-smoothing:antialiased;}
+        html,body{min-height:100vh;font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f8;color:#0f172a;-webkit-font-smoothing:antialiased;}
 
         /* ── Page ── */
         .page{min-height:100vh;display:flex;}
@@ -67,9 +67,9 @@
 
         /* ── Form card ── */
         .card{
-            background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;
-            padding:36px 32px;
-            box-shadow:0 4px 24px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.8);
+            background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:32px;
+            padding:40px 36px;
+            box-shadow:0 8px 48px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.8);
             animation:cardIn .6s var(--ease) both;
         }
         @keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -92,10 +92,10 @@
         .fl:hover{color:#2563eb;}
         .input-wrap{position:relative;}
         .field input{
-            width:100%;padding:12px 14px;
-            font-family:'Inter',sans-serif;font-size:.9rem;
-            background:#f8fafc;border:1.5px solid rgba(0,0,0,.1);
-            border-radius:10px;color:#0f172a;outline:none;
+            width:100%;padding:14px 16px;
+            font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:600;
+            background:#f8fafc;border:1.5px solid rgba(0,0,0,.08);
+            border-radius:14px;color:#0f172a;outline:none;
             transition:all var(--t) var(--ease);
         }
         .field input::placeholder{color:#cbd5e1;}
@@ -117,11 +117,11 @@
 
         /* Submit */
         .sbtn{
-            width:100%;padding:13px;
+            width:100%;padding:14px;
             background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 60%,#3b82f6 100%);
-            color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;
-            border:none;border-radius:11px;cursor:pointer;
-            box-shadow:0 4px 20px rgba(37,99,235,.3),inset 0 1px 0 rgba(255,255,255,.2);
+            color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.05rem;
+            border:none;border-radius:99px;cursor:pointer;
+            box-shadow:0 4px 20px rgba(37,99,235,.25),inset 0 1px 0 rgba(255,255,255,.2);
             transition:all var(--t) var(--ease);
             letter-spacing:.01em;
             position:relative;overflow:hidden;

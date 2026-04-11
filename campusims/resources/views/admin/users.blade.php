@@ -125,8 +125,8 @@
                         @endif
                     </button>
                 </form>
-                <form method="POST" action="{{ route('admin.users.destroy', $u) }}"
-                      onsubmit="return confirm('Permanently delete {{ addslashes($u->name) }}?')">
+                <form method="POST" action="javascript:void(0)"
+                      onsubmit="cd('{{ route('admin.users.destroy', $u) }}', 'Permanently delete {{ addslashes($u->name) }}?')">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>

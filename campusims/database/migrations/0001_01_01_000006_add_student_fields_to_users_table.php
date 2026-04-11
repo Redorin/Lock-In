@@ -9,9 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('student_id')->nullable()->unique()->after('role');
-            $table->string('id_image')->nullable()->after('student_id');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('id_image');
+            if (!Schema::hasColumn('users', 'student_id')) {
+                $table->string('student_id')->nullable()->unique()->after('role');
+            }
+            if (!Schema::hasColumn('users', 'id_image')) {
+                $table->string('id_image')->nullable()->after('student_id');
+            }
+            if (!Schema::hasColumn('users', 'status')) {
+                $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending')->after('id_image');
+            }
         });
     }
 
