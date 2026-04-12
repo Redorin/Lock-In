@@ -262,7 +262,7 @@
         .mobile-topbar {
             display:none;
             align-items:center;justify-content:space-between;
-            padding:14px 18px;
+            padding:12px 16px;
             background:var(--sidebar);
             border-bottom:1px solid var(--border);
             position:sticky;top:0;z-index:50;
@@ -271,9 +271,9 @@
             transition:background var(--t) var(--ease);
         }
         .mob-brand { display:flex;align-items:center;gap:10px;text-decoration:none; }
-        .mob-logo { width:34px;height:34px;border-radius:9px;overflow:hidden;flex-shrink:0; }
+        .mob-logo { width:34px;height:34px;border-radius:9px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px var(--accent-glow); }
         .mob-logo img { width:100%;height:100%;object-fit:cover;display:block; }
-        .mob-name { font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:-.3px;color:var(--text); }
+        .mob-name { font-family:'Plus Jakarta Sans',sans-serif;font-size:.97rem;font-weight:800;letter-spacing:-.3px;color:var(--text); }
         .mob-right { display:flex;align-items:center;gap:8px; }
         .mob-theme {
             width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);
@@ -281,6 +281,7 @@
             cursor:pointer;color:var(--text-soft);
             transition:all var(--t) var(--ease);
         }
+        .mob-theme:hover { background:var(--accent-bg);color:var(--accent2);border-color:var(--accent-border); }
         .mob-theme svg { width:17px;height:17px; }
         .ham {
             width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);
@@ -288,13 +289,89 @@
             cursor:pointer;color:var(--text-soft);
             transition:all var(--t) var(--ease);
         }
-        .ham:hover,.mob-theme:hover { background:var(--accent-bg);color:var(--accent2);border-color:var(--accent-border); }
-        .ham svg,.mob-theme svg { width:18px;height:18px; }
+        .ham:hover { background:var(--accent-bg);color:var(--accent2);border-color:var(--accent-border); }
+        .ham svg { width:18px;height:18px; }
 
-        .mobile-content { display:none;padding:16px 18px 48px;position:relative;z-index:1; }
+        /* Greeting pill (mobile topbar — display only, not tappable) */
+        .mob-gpill {
+            display:flex;align-items:center;gap:8px;
+            background:var(--surface2);border:1px solid var(--border2);
+            border-radius:99px;padding:5px 12px 5px 5px;
+            font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:700;color:var(--text);
+            box-shadow:var(--shadow-sm);
+        }
+        .mob-gpill .g-av {
+            width:26px;height:26px;border-radius:50%;
+            background:linear-gradient(135deg,var(--accent),#6366f1);
+            display:flex;align-items:center;justify-content:center;
+            font-size:.6rem;font-weight:800;color:#fff;
+        }
+
+        .mobile-content { display:none;padding:16px 16px 90px;position:relative;z-index:1; }
         .mob-page-hdr { margin-bottom:20px; }
-        .mob-page-hdr h2 { font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-.4px;color:var(--text); }
-        .mob-page-hdr p { font-size:.8rem;color:var(--text-soft);margin-top:2px; }
+        .mob-page-hdr h2 { font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.4px;color:var(--text); }
+        .mob-page-hdr p { font-size:.8rem;color:var(--text-soft);margin-top:3px; }
+
+        /* ═══════════════════════════════════════════
+           BOTTOM TAB BAR
+        ═══════════════════════════════════════════ */
+        .mob-tabbar {
+            display:none;
+            position:fixed;bottom:0;left:0;right:0;z-index:100;
+            background:var(--sidebar);
+            border-top:1px solid var(--border);
+            backdrop-filter:blur(28px) saturate(180%);
+            -webkit-backdrop-filter:blur(28px) saturate(180%);
+            padding-bottom:env(safe-area-inset-bottom, 0px);
+            transition:background var(--t) var(--ease);
+            box-shadow:0 -4px 24px rgba(0,0,0,.18);
+        }
+        .mob-tabbar-inner {
+            display:flex;align-items:stretch;
+            height:60px;
+        }
+        .tab-btn {
+            flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+            gap:4px;text-decoration:none;
+            color:var(--text-muted);
+            transition:color var(--t) var(--ease),background var(--t) var(--ease);
+            position:relative;padding:0 4px;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .tab-btn svg { width:20px;height:20px;flex-shrink:0;transition:transform var(--t) var(--ease-back); }
+        .tab-btn span { font-family:'Plus Jakarta Sans',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.02em;line-height:1; }
+        .tab-btn:hover { color:var(--text-soft); }
+        .tab-btn:hover svg { transform:scale(1.1); }
+        .tab-btn.active { color:var(--accent2); }
+        .tab-btn.active svg { transform:scale(1.08); }
+        .tab-btn.active::before {
+            content:'';
+            position:absolute;top:0;left:50%;transform:translateX(-50%);
+            width:28px;height:2px;
+            background:var(--accent);border-radius:0 0 4px 4px;
+            box-shadow:0 0 8px var(--accent-glow);
+        }
+
+        /* Floating scanner tab (centre, elevated) */
+        .tab-scan {
+            flex:0 0 72px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+            gap:4px;text-decoration:none;
+            position:relative;
+            margin-top:-20px;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .tab-scan-circle {
+            width:54px;height:54px;border-radius:50%;
+            background:linear-gradient(135deg,var(--accent),#6366f1);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 4px 20px var(--accent-glow),var(--inset);
+            border:2px solid var(--accent-border);
+            transition:all var(--t) var(--ease-back);
+        }
+        .tab-scan-circle svg { width:22px;height:22px;color:#fff; }
+        .tab-scan span { font-family:'Plus Jakarta Sans',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.02em;color:var(--accent2);margin-top:2px; }
+        .tab-scan:active .tab-scan-circle { transform:scale(.92); }
+        .tab-scan.active .tab-scan-circle { box-shadow:0 6px 28px var(--accent-glow),var(--inset); }
 
         /* ═══════════════════════════════════════════
            DRAWER
@@ -512,7 +589,7 @@
            BREAKPOINTS
         ═══════════════════════════════════════════ */
         @media(min-width:900px) {
-            .mobile-topbar,.mobile-content,.drawer,.drawer-overlay { display:none!important; }
+            .mobile-topbar,.mobile-content,.drawer,.drawer-overlay,.mob-tabbar { display:none!important; }
             .desktop-sidebar { display:flex; }
             .desktop-main { display:block; }
         }
@@ -520,6 +597,7 @@
             .desktop-sidebar,.desktop-main { display:none!important; }
             .mobile-topbar { display:flex; }
             .mobile-content { display:block; }
+            .mob-tabbar { display:block; }
         }
     </style>
     @yield('styles')
@@ -586,15 +664,21 @@
 {{-- MOBILE TOPBAR --}}
 <div class="mobile-topbar">
     <a href="{{ route('student.dashboard') }}" class="mob-brand">
-        <div class="mob-logo"><img src="{{ asset('storage/udd-logo.jpg') }}" alt="UDD"></div>
+        <div class="mob-logo"><img src="{{ asset('storage/udd-logo.jpg') }}" alt="UDD"
+             onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#3b82f6,#6366f1)'"></div>
         <span class="mob-name">UDDSafeSpaces</span>
     </a>
     <div class="mob-right">
-        <button class="mob-theme" onclick="toggleTheme()">
+        {{-- Display-only greeting pill --}}
+        <div class="mob-gpill">
+            <div class="g-av">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
+            Hi, {{ explode(' ',auth()->user()->name)[0] }}!
+        </div>
+        <button class="mob-theme" onclick="toggleTheme()" title="Toggle theme">
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
-        <button class="ham" onclick="openDrawer()">
+        <button class="ham" onclick="openDrawer()" title="Menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
     </div>
@@ -608,7 +692,36 @@
     @yield('content')
 </div>
 
-{{-- DRAWER --}}
+{{-- MOBILE BOTTOM TAB BAR --}}
+<nav class="mob-tabbar" id="mobTabbar">
+    <div class="mob-tabbar-inner">
+        <a href="{{ route('student.dashboard') }}" class="tab-btn {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="{{ route('student.map') }}" class="tab-btn {{ request()->routeIs('student.map') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+            <span>Map</span>
+        </a>
+        {{-- Floating QR scan button --}}
+        <a href="{{ route('student.scanner') }}" class="tab-scan {{ request()->routeIs('student.scanner') ? 'active' : '' }}">
+            <div class="tab-scan-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><line x1="16" y1="16" x2="21" y2="16"/><line x1="16" y1="21" x2="21" y2="21"/><line x1="16" y1="16" x2="16" y2="21"/></svg>
+            </div>
+            <span>Scan</span>
+        </a>
+        <a href="{{ route('student.id-card') }}" class="tab-btn {{ request()->routeIs('student.id-card') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><line x1="13" y1="10" x2="19" y2="10"/><line x1="13" y1="14" x2="17" y2="14"/></svg>
+            <span>ID Card</span>
+        </a>
+        <a href="{{ route('student.settings') }}" class="tab-btn {{ request()->routeIs('student.settings') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Settings</span>
+        </a>
+    </div>
+</nav>
+
+{{-- DRAWER (opened from More tab or avatar pill) --}}
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
     <div class="d-head">

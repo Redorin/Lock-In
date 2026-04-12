@@ -32,7 +32,7 @@
                     <td style="font-size:.78rem;">{{ $a->created_at->format('M d, Y') }}</td>
                     <td>
                         @if($a->id!==auth()->id())
-                        <form method="POST" action="{{ route('admin.admins.destroy',$a) }}" onsubmit="return confirm('Delete admin {{ addslashes($a->name) }}?')">@csrf @method('DELETE')
+                        <form method="POST" action="javascript:void(0)" onsubmit="delConfirm('{{ route('admin.admins.destroy',$a) }}', 'Delete admin {{ addslashes($a->name) }}?')">@csrf @method('DELETE')
                             <button type="submit" class="btn btn-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</button>
                         </form>
                         @else<span style="font-size:.75rem;color:var(--muted);">Current session</span>@endif
@@ -44,8 +44,13 @@
         </table>
     </div>
 </div></div>
+@endsection
 
+@section('modals')
 <div class="modal-overlay" id="addAdminM"><div class="modal">
+    <div style="width:48px;height:48px;border-radius:14px;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--accent2);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:24px;height:24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
     <div class="modal-title">Create Admin Account</div>
     <div class="modal-sub">This account will have full admin access to CampuSIMS.</div>
     <form method="POST" action="{{ route('admin.admins.store') }}">@csrf
@@ -60,6 +65,7 @@
     </form>
 </div></div>
 @endsection
+
 @section('scripts')
 <script>document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));</script>
 @endsection

@@ -343,7 +343,7 @@ setInterval(()=>{rem--;if(rem<=60&&!warned){warned=true;sc();}if(rem<=0)(documen
 </div></div>
 
 <script>
-function cd(r,m) {
+function delConfirm(r,m) {
     document.getElementById('gdelForm').action = r;
     document.getElementById('gdelMsg').textContent = m;
     document.getElementById('globalDeleteModal').classList.add('open');

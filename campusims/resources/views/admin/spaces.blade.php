@@ -36,7 +36,7 @@
                             <button class="btn btn-ghost" onclick="openEdit({{ $s->id }},'{{ addslashes($s->building) }}','{{ addslashes($s->name) }}',{{ $s->capacity }},{{ $s->current_occupancy }})">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
                             </button>
-                            <form method="POST" action="javascript:void(0)" onsubmit="cd('{{ route('admin.spaces.destroy',$s) }}', 'Delete {{ addslashes($s->name) }}?')">
+                            <form method="POST" action="javascript:void(0)" onsubmit="delConfirm('{{ route('admin.spaces.destroy',$s) }}', 'Delete {{ addslashes($s->name) }}?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</button>
                             </form>
@@ -54,6 +54,9 @@
 
 @section('modals')
 <div class="modal-overlay" id="addM"><div class="modal">
+    <div style="width:48px;height:48px;border-radius:14px;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--accent2);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:24px;height:24px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
     <div class="modal-title">Add New Space</div>
     <div class="modal-sub">Fill in the details for the new campus space.</div>
     <form method="POST" action="{{ route('admin.spaces.store') }}">@csrf
@@ -68,6 +71,9 @@
 </div></div>
 
 <div class="modal-overlay" id="editM"><div class="modal">
+    <div style="width:48px;height:48px;border-radius:14px;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--text-soft);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:24px;height:24px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </div>
     <div class="modal-title">Edit Space</div>
     <div class="modal-sub" id="editLbl">Update capacity and occupancy.</div>
     <form method="POST" id="editF">@csrf @method('PATCH')

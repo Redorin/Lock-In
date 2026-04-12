@@ -93,7 +93,6 @@
     .scanner-footer { padding:0 32px 32px; }
     .scanner-hint { font-size:.8rem; color:var(--text-muted); text-align:center; line-height:1.6; }
 
-    /* permission denied state */
     .cam-denied {
         display:none; flex-direction:column; align-items:center;
         justify-content:center; padding:40px 20px; text-align:center;
@@ -103,6 +102,17 @@
     .cam-denied p { font-size:.9rem; color:var(--text-soft); }
     .cam-retry { padding:12px 24px; background:linear-gradient(135deg,var(--accent),#6366f1); color:#fff; border:none; border-radius:99px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.9rem; font-weight:700; cursor:pointer; box-shadow:0 4px 20px var(--accent-glow); transition:all var(--t) var(--ease); }
     .cam-retry:hover { transform:translateY(-2px);box-shadow:0 6px 28px var(--accent-glow); }
+
+    @media(max-width:640px) {
+        .scanner-wrap { gap:16px; }
+        .scanner-box { border-radius:24px; }
+        .scanner-header { padding:22px 20px 0; }
+        .scanner-title { font-size:1.2rem; }
+        .camera-area { margin:16px; }
+        .scanner-footer { padding:0 20px 24px; }
+        .active-card { flex-direction:column; gap:16px; border-radius:20px; padding:18px 20px; }
+        .checkout-btn { width:100%; text-align:center; }
+    }
 </style>
 @endsection
 

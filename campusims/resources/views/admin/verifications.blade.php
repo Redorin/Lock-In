@@ -76,8 +76,13 @@
     </div>
     @endif
 </div></div>
+@endsection
 
+@section('modals')
 <div class="modal-overlay" id="rejectM"><div class="modal">
+    <div style="width:48px;height:48px;border-radius:14px;background:var(--danger-bg);border:1px solid var(--danger-border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--danger);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:24px;height:24px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
     <div class="modal-title">Reject Registration</div>
     <div class="modal-sub">Rejecting: <strong id="rn" style="color:var(--danger);"></strong></div>
     <form method="POST" id="rejectF">@csrf @method('PATCH')
@@ -96,6 +101,7 @@
     <img id="lbi" src="" alt="">
 </div>
 @endsection
+
 @section('scripts')
 <script>
 function openReject(id,n){document.getElementById('rn').textContent=n;document.getElementById('rejectF').action='/admin/verifications/'+id+'/reject';document.getElementById('rejectM').classList.add('open');}
