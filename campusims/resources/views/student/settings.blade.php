@@ -122,6 +122,23 @@
             <div class="pc-stat-val">{{ $user->student_id ?? '—' }}</div>
             <div class="pc-stat-lbl">Student ID</div>
         </div>
+
+        <div class="pc-divider"></div>
+        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            @csrf
+            <button type="submit" style="
+                width: 100%; padding: 12px;
+                background: var(--danger-bg); color: var(--danger);
+                border: 1px solid var(--danger-border); border-radius: 99px;
+                font-family: 'Plus Jakarta Sans', sans-serif; font-size: .875rem; font-weight: 700;
+                cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+                transition: all var(--t) var(--ease);
+            " onmouseover="this.style.background='var(--danger)';this.style.color='#fff';"
+               onmouseout="this.style.background='var(--danger-bg)';this.style.color='var(--danger)';">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign Out
+            </button>
+        </form>
     </div>
 
     <div class="fc">

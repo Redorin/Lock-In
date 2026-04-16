@@ -283,14 +283,6 @@
         }
         .mob-theme:hover { background:var(--accent-bg);color:var(--accent2);border-color:var(--accent-border); }
         .mob-theme svg { width:17px;height:17px; }
-        .ham {
-            width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);
-            border-radius:9px;display:flex;align-items:center;justify-content:center;
-            cursor:pointer;color:var(--text-soft);
-            transition:all var(--t) var(--ease);
-        }
-        .ham:hover { background:var(--accent-bg);color:var(--accent2);border-color:var(--accent-border); }
-        .ham svg { width:18px;height:18px; }
 
         /* Greeting pill (mobile topbar — display only, not tappable) */
         .mob-gpill {
@@ -678,9 +670,6 @@
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
-        <button class="ham" onclick="openDrawer()" title="Menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
     </div>
 </div>
 
@@ -721,45 +710,6 @@
     </div>
 </nav>
 
-{{-- DRAWER (opened from More tab or avatar pill) --}}
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-    <div class="d-head">
-        <div class="d-brand">
-            <div class="d-logo"><img src="{{ asset('storage/udd-logo.jpg') }}" alt="UDD"></div>
-            <span class="d-brand-name">UDDSafeSpaces</span>
-        </div>
-        <button class="d-close" onclick="closeDrawer()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-    </div>
-    <div class="d-user">
-        <div class="d-av">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
-        <div><div class="d-uname">{{ auth()->user()->name }}</div><div class="d-urole">{{ auth()->user()->role }}</div></div>
-    </div>
-    <nav class="d-nav">
-        @foreach($nav as $item)
-        <a href="{{ route($item['route']) }}" class="d-ni {{ request()->routeIs($item['route']) ? 'active' : '' }}" onclick="closeDrawer()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $item['icon'] !!}</svg>
-            {{ $item['label'] }}
-        </a>
-        @endforeach
-    </nav>
-    <div class="d-foot">
-        <button class="d-theme-btn" onclick="toggleTheme()">
-            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            <span id="themeLabel">Switch to Light Mode</span>
-        </button>
-        <form method="POST" action="{{ route('logout') }}">@csrf
-            <button type="submit" class="d-logout">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                Sign Out
-            </button>
-        </form>
-    </div>
-</div>
-
 <div class="t-banner" id="tb">
     <div class="t-title">⚠ Session Expiring</div>
     <div class="t-sub">You'll be logged out in:</div>
@@ -778,13 +728,6 @@ function applyTheme(t) {
 }
 function toggleTheme() { applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
 (function(){ applyTheme(localStorage.getItem('uddss_theme') || 'dark'); })();
-
-// Drawer
-function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); document.body.style.overflow=''; }
-let _tx=0;
-document.getElementById('drawer').addEventListener('touchstart', e=>{ _tx=e.touches[0].clientX; },{passive:true});
-document.getElementById('drawer').addEventListener('touchend', e=>{ if(_tx-e.changedTouches[0].clientX>50) closeDrawer(); },{passive:true});
 
 // Session timeout
 let rem=3600,warned=false,cd=60,ci;

@@ -1,4 +1,4 @@
-@extends('admin.layout')
+ow the upper part of the app on the student side feels too tight. on the other hand, the admin side doesnt have the navigation bar on the bottom of the screen. before implementing anything, id like to ask, is the side bar really necessary for both sides? deos the navigation really needed? defend these features before implementing@extends('admin.layout')
 @section('title','Users')
 @section('page-title','Manage Users')
 @section('page-sub','All approved student accounts')
