@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo('/login');
+        $middleware->alias([
+            'ensure.not.checked.in' => \App\Http\Middleware\RedirectIfCheckedIn::class,
+        ]);
     })
     ->withSchedule(function (Schedule $schedule) {
         // Auto-checkout every 30 minutes

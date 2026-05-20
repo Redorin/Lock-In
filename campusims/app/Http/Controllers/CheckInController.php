@@ -14,12 +14,24 @@ class CheckInController extends \Illuminate\Routing\Controller
 
     public function scannerPage()
     {
+        // Active check-in logic removed since middleware prevents reaching here if checked in.
+        return view('student.scanner', ['activeCheckIn' => null]);
+    }
+
+    // ── Student: Active Check-In Page (Focus Mode) ────────────────────────────
+
+    public function activePage()
+    {
         $activeCheckIn = CheckIn::where('user_id', Auth::id())
             ->whereNull('checked_out_at')
             ->with('space')
             ->first();
 
-        return view('student.scanner', compact('activeCheckIn'));
+        if (!$activeCheckIn) {
+            return redirect()->route('student.dashboard');
+        }
+
+        return view('student.checked-in', compact('activeCheckIn'));
     }
 
     // ── Student: Handle scanned QR URL ────────────────────────────────────────
@@ -87,13 +99,7 @@ class CheckInController extends \Illuminate\Routing\Controller
 
         $space->increment('current_occupancy');
 
-        return view('student.checkin-result', [
-            'success'  => true,
-            'message'  => "Successfully checked into {$space->building} — {$space->name}!",
-            'space'    => $space,
-            'checkIn'  => CheckIn::where('user_id', $user->id)->whereNull('checked_out_at')->first(),
-            'prevSpace'=> $prevCheckIn ? $prevCheckIn->space : null,
-        ]);
+        return redirect()->route('student.checked-in')->with('success', "Successfully checked into {$space->building} — {$space->name}!");
     }
 
     // ── Student: Manual checkout ──────────────────────────────────────────────
@@ -113,7 +119,7 @@ class CheckInController extends \Illuminate\Routing\Controller
         $checkIn->update(['checked_out_at' => now()]);
         $checkIn->space->decrement('current_occupancy');
 
-        return redirect()->route('student.scanner')
+        return redirect()->route('student.dashboard')
             ->with('success', "Checked out of {$checkIn->space->building} — {$checkIn->space->name}.");
     }
 

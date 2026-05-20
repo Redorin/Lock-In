@@ -126,38 +126,7 @@
 <div class="result-wrap">
     <div class="result-card">
 
-        @if($success)
-        {{-- ── Success ── --}}
-        <div class="result-icon icon-success">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="result-title" style="color:var(--accent2);">Checked In!</div>
-        <div class="result-msg">{{ $message }}</div>
-
-        @if($prevSpace ?? false)
-        <div class="prev-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Auto-checked out of <strong>{{ $prevSpace->building }} — {{ $prevSpace->name }}</strong>
-        </div>
-        @endif
-
-        @if($space)
-        <div class="checkin-info">
-            <div class="ci-row"><span class="ci-label">Space</span><span class="ci-val">{{ $space->name }}</span></div>
-            <div class="ci-row"><span class="ci-label">Building</span><span class="ci-val">{{ $space->building }}</span></div>
-            <div class="ci-row"><span class="ci-label">Checked in at</span><span class="ci-val">{{ now()->format('g:i A') }}</span></div>
-            <div class="ci-row"><span class="ci-label">Auto-checkout at</span><span class="ci-val">{{ now()->addHours(2)->format('g:i A') }}</span></div>
-            <div class="ci-row"><span class="ci-label">Occupancy</span><span class="ci-val">{{ $space->current_occupancy }} / {{ $space->capacity }}</span></div>
-        </div>
-        @endif
-
-        <form method="POST" action="{{ route('checkin.checkout') }}">
-            @csrf
-            <button type="submit" class="btn-danger-ghost">Check Out Now</button>
-        </form>
-        <a href="{{ route('student.dashboard') }}" class="btn-ghost">Back to Dashboard</a>
-
-        @elseif(isset($alreadyIn) && $alreadyIn)
+        @if(isset($alreadyIn) && $alreadyIn)
         {{-- ── Already checked in ── --}}
         <div class="result-icon icon-warn">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>

@@ -45,9 +45,12 @@
         background:#000; aspect-ratio:1;
         box-shadow:var(--shadow-sm),var(--inset);
     }
-    #qr-video {
-        width:100%; height:100%;
-        object-fit:cover; display:block;
+    #reader {
+        width:100%; height:100%; display:block;
+    }
+    #reader video {
+        width:100% !important; height:100% !important;
+        object-fit:cover !important; display:block !important;
     }
     /* scan overlay corners */
     .scan-overlay {
@@ -100,6 +103,7 @@
     }
     .cam-denied svg { width:48px; height:48px; opacity:.8; color:var(--danger); }
     .cam-denied p { font-size:.9rem; color:var(--text-soft); }
+    .cam-denied .cam-warn { font-size:.8rem; color:var(--text-muted); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px 14px; line-height:1.6; }
     .cam-retry { padding:12px 24px; background:linear-gradient(135deg,var(--accent),#6366f1); color:#fff; border:none; border-radius:99px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.9rem; font-weight:700; cursor:pointer; box-shadow:0 4px 20px var(--accent-glow); transition:all var(--t) var(--ease); }
     .cam-retry:hover { transform:translateY(-2px);box-shadow:0 6px 28px var(--accent-glow); }
 
@@ -119,30 +123,19 @@
 @section('content')
 <div class="scanner-wrap">
 
-    {{-- Currently checked in --}}
-    @if($activeCheckIn)
-    <div class="active-card">
-        <div>
-            <div class="active-label">Currently Checked In</div>
-            <div class="active-space">{{ $activeCheckIn->space->building }} — {{ $activeCheckIn->space->name }}</div>
-            <div class="active-time">Since {{ $activeCheckIn->checked_in_at->format('g:i A') }} · Auto-checkout in 2 hrs</div>
-        </div>
-        <form method="POST" action="{{ route('checkin.checkout') }}">
-            @csrf
-            <button type="submit" class="checkout-btn">Check Out</button>
-        </form>
-    </div>
-    @endif
 
     {{-- Scanner --}}
     <div class="scanner-box">
         <div class="scanner-header">
             <div class="scanner-title">Scan Space QR Code</div>
             <div class="scanner-sub">Point your camera at the QR code posted at the space entrance</div>
+            <div id="cameraSelectWrapper" style="display:none; margin-top:16px;">
+                <select id="cameraSelect" class="fsel" style="width:100%; max-width:300px; margin:0 auto; display:block;" onchange="switchCamera(this.value)"></select>
+            </div>
         </div>
 
         <div class="camera-area" id="cameraArea">
-            <video id="qr-video" autoplay playsinline muted></video>
+            <div id="reader"></div>
             <div class="scan-overlay">
                 <div class="scan-frame">
                     <span></span>
@@ -154,14 +147,15 @@
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                     <line x1="1" y1="1" x2="23" y2="23"/>
                 </svg>
-                <p>Camera access denied. Please allow camera permission to scan QR codes.</p>
+                <p id="camDeniedMsg">Camera access denied. Please allow camera permission to scan QR codes.</p>
+                <div class="cam-warn" id="camDeniedHint" style="display:none"></div>
                 <button class="cam-retry" onclick="startCamera()">Try Again</button>
             </div>
         </div>
 
         <div class="scanner-status" id="scannerStatus">
             <span class="status-dot"></span>
-            <span id="statusText">Initializing camera...</span>
+            <span id="statusText">Loading scanner interface...</span>
         </div>
 
         <div class="scanner-footer">
@@ -173,77 +167,166 @@
 @endsection
 
 @section('scripts')
-{{-- jsQR library for QR decoding --}}
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
 <script>
-const video      = document.getElementById('qr-video');
 const statusText = document.getElementById('statusText');
 const camDenied  = document.getElementById('camDenied');
-let   stream     = null;
-let   scanning   = true;
-let   canvas, ctx;
+const readerElement = document.getElementById('reader');
+const cameraSelect = document.getElementById('cameraSelect');
+const cameraSelectWrapper = document.getElementById('cameraSelectWrapper');
+let html5QrCode;
+let availableCameras = [];
 
-async function startCamera() {
+function populateCameraSelect(devices, selectedId) {
+    cameraSelect.innerHTML = '';
+    devices.forEach(device => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+        if (device.deviceId === selectedId) option.selected = true;
+        cameraSelect.appendChild(option);
+    });
+    if (devices.length > 1) {
+        cameraSelectWrapper.style.display = 'block';
+    }
+}
+
+window.switchCamera = function(cameraId) {
+    if (html5QrCode && html5QrCode.isScanning) {
+        statusText.textContent = 'Switching camera...';
+        html5QrCode.stop().then(() => {
+            startScannerWithId(cameraId);
+        }).catch(err => {
+            console.error("Failed to stop scanner", err);
+            startScannerWithId(cameraId);
+        });
+    } else {
+        startScannerWithId(cameraId);
+    }
+};
+
+function startScannerWithId(cameraId) {
     camDenied.style.display = 'none';
-    video.style.display     = 'block';
-    statusText.textContent  = 'Starting camera...';
+    readerElement.style.display = 'block';
+    updateStatus('Initializing camera...');
 
-    try {
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 1280 } }
-        });
-        video.srcObject = stream;
-        await video.play();
-        statusText.textContent = 'Ready — point at a QR code';
-
-        // Setup canvas for frame capture
-        canvas = document.createElement('canvas');
-        ctx    = canvas.getContext('2d', { willReadFrequently: true });
-
-        scanning = true;
-        requestAnimationFrame(scanFrame);
-    } catch (err) {
-        video.style.display    = 'none';
-        camDenied.style.display = 'flex';
-        statusText.textContent  = 'Camera unavailable';
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
     }
-}
 
-function scanFrame() {
-    if (!scanning) return;
-
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width  = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code      = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: 'dontInvert'
-        });
-
-        if (code) {
-            const url = code.data;
-            // Only process if it's a CampuSIMS check-in URL
-            if (url.includes('/checkin/scan')) {
-                scanning = false;
-                statusText.textContent = '✓ QR detected — checking in...';
-                if (stream) stream.getTracks().forEach(t => t.stop());
-                window.location.href = url;
-                return;
-            }
+    // Pass video constraints safely through the config object rather than the first argument
+    const config = { 
+        fps: 10,
+        videoConstraints: {
+            deviceId: { exact: cameraId },
+            width: { ideal: 640 },
+            height: { ideal: 480 }
         }
-    }
-    requestAnimationFrame(scanFrame);
+    };
+
+    console.log("Starting scanner with camera ID:", cameraId);
+
+    // html5-qrcode requires exactly 1 key if passing an object, 
+    // or we can just pass the string if we didn't want custom constraints.
+    // However, since we want to prevent portrait crashes with custom constraints, 
+    // we use a single-key object here, or just the string, and put the rest in videoConstraints.
+    // Actually, if we pass string, html5-qrcode handles it well. Let's just pass the string
+    // and rely on videoConstraints in the config.
+    html5QrCode.start(
+        cameraId,
+        config,
+        (decodedText) => {
+            if (decodedText.includes('/checkin/scan')) {
+                html5QrCode.pause();
+                updateStatus('✓ QR detected — checking in...');
+                try {
+                    const qrUrl = new URL(decodedText);
+                    const fixedUrl = window.location.origin + qrUrl.pathname + qrUrl.search;
+                    window.location.href = fixedUrl;
+                } catch {
+                    window.location.href = decodedText;
+                }
+            }
+        },
+        (errorMessage) => {}
+    ).then(() => {
+        console.log("Scanner started successfully.");
+        updateStatus('Ready — point at a QR code');
+    }).catch((err) => {
+        console.error("Scanner failed to start:", err);
+        readerElement.style.display = 'none';
+        camDenied.style.display = 'flex';
+        updateStatus('Camera start failed');
+        document.getElementById('camDeniedMsg').textContent = err.message || err;
+    });
 }
 
-// Start camera on page load
-startCamera();
+function updateStatus(msg) {
+    const el = document.getElementById('statusText');
+    if (el) el.innerText = msg;
+}
 
-// Stop camera when leaving page
+function initScanner() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        readerElement.style.display = 'none';
+        camDenied.style.display = 'flex';
+        updateStatus('Camera unavailable (HTTPS needed)');
+        document.getElementById('camDeniedMsg').textContent = 'Camera requires a secure connection (HTTPS).';
+        document.getElementById('camDeniedHint').style.display = 'block';
+        return;
+    }
+
+    updateStatus('Requesting camera permissions...');
+
+    // We must request permission first, otherwise enumerateDevices returns empty deviceIds.
+    // We use safe landscape constraints to prevent the tablet camera driver from crashing in portrait mode.
+    navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 480 } } })
+    .then(stream => {
+        // Stop the stream immediately, we just needed it to trigger the permission prompt
+        stream.getTracks().forEach(t => t.stop());
+        return navigator.mediaDevices.enumerateDevices();
+    })
+    .then(devices => {
+        const videoDevices = devices.filter(d => d.kind === 'videoinput');
+        if (videoDevices.length > 0) {
+            availableCameras = videoDevices;
+            let cameraId = videoDevices[0].deviceId;
+            for (let i = 0; i < videoDevices.length; i++) {
+                if (videoDevices[i].label) {
+                    const lbl = videoDevices[i].label.toLowerCase();
+                    if (lbl.includes('back') || lbl.includes('rear') || lbl.includes('environment')) {
+                        cameraId = videoDevices[i].deviceId;
+                        break;
+                    }
+                }
+            }
+            populateCameraSelect(videoDevices, cameraId);
+            
+            if (!cameraId) {
+                throw new Error("Permission granted but deviceId is still empty.");
+            }
+            startScannerWithId(cameraId);
+        } else {
+            throw new Error("No cameras found on this device.");
+        }
+    })
+    .catch(err => {
+        console.error("Failed to get cameras", err);
+        updateStatus('Failed to get cameras: ' + (err.message || err));
+    });
+}
+
+// Start on load
+initScanner();
+
+// Cleanup on unload
 window.addEventListener('beforeunload', () => {
-    scanning = false;
-    if (stream) stream.getTracks().forEach(t => t.stop());
+    if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().catch(() => {});
+    }
 });
 </script>
 @endsection

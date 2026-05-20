@@ -17,6 +17,17 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// ── Cert download (lets mobile devices install the self-signed cert) ───────────
+Route::get('/install-cert', function () {
+    $cert = base_path('docker/nginx/certs/selfsigned.crt');
+    abort_unless(file_exists($cert), 404);
+    return response()->file($cert, [
+        'Content-Type'        => 'application/x-x509-ca-cert',
+        'Content-Disposition' => 'attachment; filename="campusims.crt"',
+    ]);
+})->name('install-cert');
+
+
 // ── Guest ─────────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',           [Controller::class, 'showLogin'])->name('login');
@@ -33,23 +44,24 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [Controller::class, 'logout'])->name('logout')->middleware('auth');
 
 // ── Student ───────────────────────────────────────────────────────────────────
-Route::middleware(['auth', \App\Http\Middleware\RedirectIfRejected::class])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\RedirectIfRejected::class, 'ensure.not.checked.in'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/map',       [StudentDashboardController::class, 'map'])->name('map');
     Route::get('/id-card',   [StudentDashboardController::class, 'idCard'])->name('id-card');
     Route::get('/settings',  [StudentDashboardController::class, 'settings'])->name('settings');
     Route::patch('/settings',[StudentDashboardController::class, 'updateSettings'])->name('settings.update');
     Route::get('/scanner',   [CheckInController::class, 'scannerPage'])->name('scanner');
+    Route::get('/checked-in', [CheckInController::class, 'activePage'])->name('checked-in');
 });
 
 // ── Resubmit Portal (For Rejected Students) ───────────────────────────────────
-Route::middleware(['auth', \App\Http\Middleware\EnsureRejected::class])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\EnsureRejected::class, 'ensure.not.checked.in'])->prefix('student')->name('student.')->group(function () {
     Route::get('/resubmit',  [StudentDashboardController::class, 'resubmitPage'])->name('resubmit');
     Route::post('/resubmit', [StudentDashboardController::class, 'processResubmit'])->name('resubmit.post');
 });
 
 // ── Check-in (auth required) ──────────────────────────────────────────────────
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'ensure.not.checked.in'])->group(function () {
     // QR scan lands here — validates token and checks in
     Route::get('/checkin/scan',    [CheckInController::class, 'handleScan'])->name('checkin.scan');
     // Manual checkout
