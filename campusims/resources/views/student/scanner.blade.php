@@ -46,10 +46,9 @@
         border-radius:20px;
         overflow:hidden;
         background:#000;
-        /* Explicit square via padding-top — works on all mobile browsers */
-        width: calc(100% - 48px);
-        height: 0;
-        padding-bottom: calc(100% - 48px);
+        width:calc(100% - 48px);
+        aspect-ratio:1 / 1;
+        min-height:320px;
         box-shadow:var(--shadow-sm),var(--inset);
     }
 
@@ -122,7 +121,13 @@
         .scanner-box { border-radius:24px; }
         .scanner-header { padding:22px 20px 0; }
         .scanner-title { font-size:1.2rem; }
-        .camera-area { margin:16px; width:calc(100% - 32px); padding-bottom:calc(100% - 32px); }
+        .camera-area {
+            margin:16px;
+            width:calc(100% - 32px);
+            height:60vw;
+            min-height:320px;
+            aspect-ratio:auto;
+        }
         .scanner-footer { padding:0 20px 24px; }
         .active-card { flex-direction:column; gap:16px; border-radius:20px; padding:18px 20px; }
         .checkout-btn { width:100%; text-align:center; }
@@ -239,16 +244,18 @@ function startStream(deviceId) {
 
     navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
-            currentStream  = stream;
+            currentStream = stream;
             video.srcObject = stream;
 
-            // playsInline + muted + autoplay are set in HTML but we also
-            // call play() explicitly for Safari compatibility
-            return video.play();
-        })
-        .then(() => {
-            updateStatus('Ready — point at a QR code');
-            startDecoding();
+            video.onloadedmetadata = () => {
+                video.play().then(() => {
+                    updateStatus('Ready — point at a QR code');
+                    startDecoding();
+                }).catch(err => {
+                    console.error('[camera] play failed:', err);
+                    showError('Could not start video stream.');
+                });
+            };
         })
         .catch(err => {
             console.error('[camera] getUserMedia failed:', err);

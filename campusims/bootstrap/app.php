@@ -1,8 +1,5 @@
 <?php
 
-// Add this inside your withSchedule() or bootstrap/app.php
-// In Laravel 12, open bootstrap/app.php and add:
-
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

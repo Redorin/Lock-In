@@ -114,6 +114,8 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function toggleActive(User $user)
     {
+        $this->ensureStudent($user);
+
         $user->is_active = !$user->is_active;
         $user->save();
         $action = $user->is_active ? 'activated' : 'deactivated';
@@ -123,6 +125,8 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function destroyUser(User $user)
     {
+        $this->ensureStudent($user);
+
         $name = $user->name; $email = $user->email;
         $user->delete();
         ActivityLog::log('deleted User', "Deleted user: {$name} ({$email})", $name);
@@ -140,6 +144,8 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function approveUser(User $user)
     {
+        $this->ensureStudent($user);
+
         $user->update(['status' => 'approved', 'is_active' => true]);
         ActivityLog::log('approved User', "Approved: {$user->name} ({$user->email}) ID: {$user->student_id}", $user->name);
         return back()->with('success', "Account for \"{$user->name}\" approved.");
@@ -147,6 +153,8 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function rejectUser(Request $request, User $user)
     {
+        $this->ensureStudent($user);
+
         $data = $request->validate(['rejection_reason' => ['required', 'string', 'max:500']]);
         $user->update(['status' => 'rejected', 'rejection_reason' => $data['rejection_reason']]);
         ActivityLog::log('rejected User', "Rejected: {$user->name}. Reason: {$data['rejection_reason']}", $user->name);
@@ -184,6 +192,10 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function destroyAdmin(User $user)
     {
+        if (!$user->isAdmin()) {
+            abort(404);
+        }
+
         if ($user->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own admin account.');
         }
@@ -199,5 +211,12 @@ class AdminController extends \Illuminate\Routing\Controller
     {
         $logs = ActivityLog::with('user')->latest()->paginate(30);
         return view('admin.activity-logs', compact('logs'));
+    }
+
+    private function ensureStudent(User $user): void
+    {
+        if (!$user->isStudent()) {
+            abort(404);
+        }
     }
 }

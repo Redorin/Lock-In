@@ -81,16 +81,10 @@ class StudentDashboardController extends \Illuminate\Routing\Controller
         $user->name = $data['name'];
         $user->student_id = $data['student_id'];
         $user->id_image = $imageName;
-        
-        // Critically: Change status back to pending and clear the rejection reason.
         $user->status = 'pending';
         $user->rejection_reason = null;
         $user->save();
 
-        // Redirect them back. They will be logged out or redirected back to the login screen
-        // because now they are pending again and Controller blocks pending. Wait, if they are logged in,
-        // and they go to student dashboard, the middleware doesn't block pending?
-        // Wait, right now we have no middleware blocking pending users if they somehow log in!
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
