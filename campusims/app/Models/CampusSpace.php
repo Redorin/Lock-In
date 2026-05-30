@@ -36,26 +36,36 @@ class CampusSpace extends Model
         };
     }
 
-    // ── Daily rotating QR token ───────────────────────────────────────────────
+    public const QR_TOKEN_WINDOW_MINUTES = 15;
+
+    public function qrToken(?\DateTimeInterface $time = null): string
+    {
+        $timestamp = $time ? \Carbon\Carbon::parse($time) : now();
+        $window = intdiv($timestamp->timestamp, self::QR_TOKEN_WINDOW_MINUTES * 60);
+        $payload = $this->id . '|' . $window;
+
+        return hash_hmac('sha256', $payload, config('app.key'));
+    }
 
     public function dailyToken(): string
     {
-        $payload = $this->id . '|' . now()->format('Y-m-d');
-        return hash_hmac('sha256', $payload, config('app.key'));
+        return $this->qrToken();
     }
 
     public static function validateToken(int $spaceId, string $token): bool
     {
         $space = static::find($spaceId);
         if (!$space) return false;
-        return hash_equals($space->dailyToken(), $token);
+
+        return collect([now(), now()->subMinutes(self::QR_TOKEN_WINDOW_MINUTES)])
+            ->contains(fn ($time) => hash_equals($space->qrToken($time), $token));
     }
 
     public function checkinUrl(): string
     {
         return route('checkin.scan', [
             'space' => $this->id,
-            'token' => $this->dailyToken(),
+            'token' => $this->qrToken(),
         ]);
     }
 

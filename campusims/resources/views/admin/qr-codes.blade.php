@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @section('title','QR Codes')
-@section('page-title','Daily QR Codes')
-@section('page-sub','Today\'s check-in QR codes — reset automatically at midnight')
+@section('page-title','QR Codes')
+@section('page-sub','Check-in QR codes rotate every 15 minutes')
 
 @section('styles')
 <style>
@@ -74,7 +74,7 @@
 
 <div class="qr-note">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    These QR codes are valid for <strong style="color:var(--accent2);">today only ({{ now()->format('F j, Y') }})</strong> and will automatically rotate at midnight. Print or display them at each space entrance.
+    These QR codes rotate every <strong style="color:var(--accent2);">15 minutes</strong>. Refresh this page before printing or displaying QR codes at each space entrance.
 </div>
 
 @php $grouped = $spaces->groupBy('building'); @endphp
@@ -103,7 +103,7 @@
                 <span class="sbadge {{ in_array($space->status,['LOW','MODERATE']) ? 'sa' : 'si' }}">{{ $space->status }}</span>
             </div>
 
-            <div class="qr-date">Valid: {{ now()->format('M j, Y') }}</div>
+            <div class="qr-date">Generated: {{ now()->format('M j, Y g:i A') }}</div>
         </div>
         @endforeach
     </div>

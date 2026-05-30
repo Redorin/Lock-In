@@ -14,6 +14,32 @@ services:
     networks:
       - campusims-network
 
+  scheduler:
+    image: campusims-app
+    restart: unless-stopped
+    working_dir: /var/www
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    volumes:
+      - ./:/var/www
+    networks:
+      - campusims-network
+    depends_on:
+      - app
+      - db
+
+  queue:
+    image: campusims-app
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    volumes:
+      - ./:/var/www
+    networks:
+      - campusims-network
+    depends_on:
+      - app
+      - db
+
   web:
     image: nginx:alpine
     restart: unless-stopped

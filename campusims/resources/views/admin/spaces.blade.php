@@ -12,11 +12,16 @@
             <option value="">All Buildings</option>
             @foreach($buildings as $b)<option value="{{ $b }}" {{ request('building')==$b?'selected':'' }}>{{ $b }}</option>@endforeach
         </select>
-        @if(request('search')||request('building'))<a href="{{ route('admin.spaces') }}" class="btn btn-ghost">Clear</a>@endif
+        <select name="status" class="fsel" onchange="this.form.submit()">
+            <option value="">All Occupancy</option>
+            <option value="full" {{ request('status')=='full'?'selected':'' }}>Full</option>
+            <option value="high" {{ request('status')=='high'?'selected':'' }}>High occupancy</option>
+        </select>
+        @if(request('search')||request('building')||request('status'))<x-button :href="route('admin.spaces')">Clear</x-button>@endif
     </form>
-    <button class="btn btn-blue" onclick="document.getElementById('addM').classList.add('open')">
+    <x-button variant="blue" onclick="document.getElementById('addM').classList.add('open')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Space
-    </button>
+    </x-button>
 </div>
 <div class="gc"><div class="gci">
     <div class="ct">All Spaces <span style="font-size:.75rem;font-weight:500;color:var(--muted);">{{ $spaces->count() }} result(s)</span><div class="ctl"></div></div>
@@ -33,17 +38,22 @@
                     <td><span class="sbadge {{ in_array($s->status,['LOW','MODERATE'])?'sa':'si' }}">{{ $s->status }}</span></td>
                     <td>
                         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <button class="btn btn-ghost" onclick="openEdit({{ $s->id }},'{{ addslashes($s->building) }}','{{ addslashes($s->name) }}',{{ $s->capacity }},{{ $s->current_occupancy }})">
+                            <x-button onclick="openEdit({{ $s->id }},'{{ addslashes($s->building) }}','{{ addslashes($s->name) }}',{{ $s->capacity }},{{ $s->current_occupancy }})">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
-                            </button>
+                            </x-button>
                             <form method="POST" action="javascript:void(0)" onsubmit="delConfirm('{{ route('admin.spaces.destroy',$s) }}', 'Delete {{ addslashes($s->name) }}?')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</button>
+                                <x-button type="submit" variant="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</x-button>
                             </form>
                         </div>
                     </td>
                 </tr>
-                @empty<tr><td colspan="6"><div class="empty">No spaces found.</div></td></tr>
+                @empty<tr><td colspan="6"><x-empty-state
+                    title="No spaces found"
+                    :message="request('search') || request('building') || request('status') ? 'Try clearing filters or searching for another building.' : 'Add your first campus space to begin tracking occupancy.'"
+                >
+                    <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></x-slot:icon>
+                </x-empty-state></td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -64,8 +74,8 @@
         <div class="field"><label>Space Name</label><input type="text" name="name" placeholder="e.g. Canteen" required></div>
         <div class="field"><label>Maximum Capacity</label><input type="number" name="capacity" min="1" placeholder="100" required></div>
         <div class="modal-actions">
-            <button type="submit" class="btn btn-blue">Add Space</button>
-            <button type="button" class="btn btn-ghost" onclick="document.getElementById('addM').classList.remove('open')">Cancel</button>
+            <x-button type="submit" variant="blue">Add Space</x-button>
+            <x-button onclick="document.getElementById('addM').classList.remove('open')">Cancel</x-button>
         </div>
     </form>
 </div></div>
@@ -80,8 +90,8 @@
         <div class="field"><label>Maximum Capacity</label><input type="number" name="capacity" id="ec" min="1" required></div>
         <div class="field"><label>Current Occupancy</label><input type="number" name="current_occupancy" id="eo" min="0" required></div>
         <div class="modal-actions">
-            <button type="submit" class="btn btn-blue">Save Changes</button>
-            <button type="button" class="btn btn-ghost" onclick="document.getElementById('editM').classList.remove('open')">Cancel</button>
+            <x-button type="submit" variant="blue">Save Changes</x-button>
+            <x-button onclick="document.getElementById('editM').classList.remove('open')">Cancel</x-button>
         </div>
     </form>
 </div></div>

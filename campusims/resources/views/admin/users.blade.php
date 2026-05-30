@@ -68,12 +68,12 @@
         <option value="active"   {{ request('status')=='active'   ? 'selected' : '' }}>Active</option>
         <option value="inactive" {{ request('status')=='inactive' ? 'selected' : '' }}>Inactive</option>
     </select>
-    <button type="submit" class="btn btn-ghost">
+    <x-button type="submit">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Search
-    </button>
+    </x-button>
     @if(request('search') || request('status'))
-        <a href="{{ route('admin.users') }}" class="btn btn-ghost">Clear</a>
+        <x-button :href="route('admin.users')">Clear</x-button>
     @endif
 </form>
 
@@ -82,14 +82,15 @@
 @endif
 
 @if($users->isEmpty())
-    <div style="text-align:center;padding:60px;color:var(--text-muted);">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             style="margin:0 auto 14px;display:block;opacity:.2;">
+    <x-empty-state
+        :title="request('search') || request('status') ? 'No users match your filters' : 'No approved users yet'"
+        :message="request('search') || request('status') ? 'Try a different name, email, student ID, or status.' : 'Approved student accounts will appear here after verification.'"
+    >
+        <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
-        </svg>
-        <p>{{ request('search') || request('status') ? 'No users match your search.' : 'No approved users yet.' }}</p>
-    </div>
+        </svg></x-slot:icon>
+    </x-empty-state>
 @else
     <div class="ug">
         @foreach($users as $i => $u)
@@ -115,7 +116,7 @@
             <div class="uca">
                 <form method="POST" action="{{ route('admin.users.toggle', $u) }}">
                     @csrf @method('PATCH')
-                    <button type="submit" class="btn {{ $u->is_active ? 'btn-warn' : 'btn-success' }}">
+                    <x-button type="submit" :variant="$u->is_active ? 'warn' : 'success'">
                         @if($u->is_active)
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                             Deactivate
@@ -123,15 +124,15 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                             Activate
                         @endif
-                    </button>
+                    </x-button>
                 </form>
                 <form method="POST" action="javascript:void(0)"
                       onsubmit="delConfirm('{{ route('admin.users.destroy', $u) }}', 'Permanently delete {{ addslashes($u->name) }}?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
+                    <x-button type="submit" variant="danger">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
                         Delete
-                    </button>
+                    </x-button>
                 </form>
             </div>
         </div>

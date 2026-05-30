@@ -4,9 +4,9 @@
 @section('page-sub','Create and manage administrator accounts')
 @section('content')
 <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-    <button class="btn btn-blue" onclick="document.getElementById('addAdminM').classList.add('open')">
+    <x-button variant="blue" onclick="document.getElementById('addAdminM').classList.add('open')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Admin Account
-    </button>
+    </x-button>
 </div>
 <div class="gc"><div class="gci">
     <div class="ct">
@@ -33,12 +33,14 @@
                     <td>
                         @if($a->id!==auth()->id())
                         <form method="POST" action="javascript:void(0)" onsubmit="delConfirm('{{ route('admin.admins.destroy',$a) }}', 'Delete admin {{ addslashes($a->name) }}?')">@csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</button>
+                            <x-button type="submit" variant="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete</x-button>
                         </form>
                         @else<span style="font-size:.75rem;color:var(--muted);">Current session</span>@endif
                     </td>
                 </tr>
-                @empty<tr><td colspan="4"><div class="empty">No admins found.</div></td></tr>
+                @empty<tr><td colspan="4"><x-empty-state title="No admins found" message="Create an administrator account to share dashboard access with staff.">
+                    <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></x-slot:icon>
+                </x-empty-state></td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -59,8 +61,8 @@
         <div class="field"><label>Password</label><input type="password" name="password" placeholder="Min. 8 characters" required></div>
         <div class="field"><label>Confirm Password</label><input type="password" name="password_confirmation" placeholder="Repeat password" required></div>
         <div class="modal-actions">
-            <button type="submit" class="btn btn-blue">Create Admin</button>
-            <button type="button" class="btn btn-ghost" onclick="document.getElementById('addAdminM').classList.remove('open')">Cancel</button>
+            <x-button type="submit" variant="blue">Create Admin</x-button>
+            <x-button onclick="document.getElementById('addAdminM').classList.remove('open')">Cancel</x-button>
         </div>
     </form>
 </div></div>

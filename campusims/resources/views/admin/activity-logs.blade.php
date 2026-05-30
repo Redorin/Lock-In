@@ -59,7 +59,9 @@
 
 @section('content')
 @if($logs->isEmpty())
-    <div class="gc"><div class="gci"><div class="empty">No activity recorded yet.</div></div></div>
+    <div class="gc"><div class="gci"><x-empty-state title="No activity recorded yet" message="Admin actions, check-ins, checkouts, and system events will appear here.">
+        <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg></x-slot:icon>
+    </x-empty-state></div></div>
 @else
     <div class="ll">
         @foreach($logs as $i => $log)

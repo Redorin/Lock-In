@@ -23,7 +23,9 @@
         <div class="ctl"></div>
     </div>
     @if($pending->isEmpty())
-        <div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>No pending verifications — all caught up!</div>
+        <x-empty-state title="All caught up" message="New student registrations that need review will appear here.">
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></x-slot:icon>
+        </x-empty-state>
     @else
     <div class="table-wrap">
         <table class="dt">
@@ -38,9 +40,9 @@
                     <td style="font-size:.78rem;">{{ $u->created_at->format('M d, Y') }}</td>
                     <td><div style="display:flex;gap:8px;flex-wrap:wrap;">
                         <form method="POST" action="{{ route('admin.verifications.approve',$u) }}">@csrf @method('PATCH')
-                            <button type="submit" class="btn btn-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Approve</button>
+                            <x-button type="submit" variant="success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Approve</x-button>
                         </form>
-                        <button class="btn btn-danger" onclick="openReject({{ $u->id }},'{{ addslashes($u->name) }}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reject</button>
+                        <x-button variant="danger" onclick="openReject({{ $u->id }},'{{ addslashes($u->name) }}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reject</x-button>
                     </div></td>
                 </tr>
                 @endforeach
@@ -56,7 +58,9 @@
         Rejected Users <div class="ctl"></div>
     </div>
     @if($rejected->isEmpty())
-        <div class="empty">No rejected users yet.</div>
+        <x-empty-state title="No rejected users" message="Rejected registrations will stay here so admins can review past decisions.">
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></x-slot:icon>
+        </x-empty-state>
     @else
     <div class="table-wrap">
         <table class="dt">
@@ -90,8 +94,8 @@
             <textarea name="rejection_reason" placeholder="e.g. Student ID photo is unclear. Please resubmit." required></textarea>
         </div>
         <div class="modal-actions">
-            <button type="submit" class="btn btn-danger">Confirm Reject</button>
-            <button type="button" class="btn btn-ghost" onclick="document.getElementById('rejectM').classList.remove('open')">Cancel</button>
+            <x-button type="submit" variant="danger">Confirm Reject</x-button>
+            <x-button onclick="document.getElementById('rejectM').classList.remove('open')">Cancel</x-button>
         </div>
     </form>
 </div></div>

@@ -99,8 +99,7 @@ class Controller extends \Illuminate\Routing\Controller
             'id_image.max'      => 'Image must be under 10MB.',
         ]);
 
-        $imageName = time() . '_' . $request->file('id_image')->getClientOriginalName();
-        $request->file('id_image')->storeAs('id_images', $imageName, 'public');
+        $imageName = basename($request->file('id_image')->store('id_images', 'public'));
 
         User::create([
             'name'       => $data['first_name'] . ' ' . $data['last_name'],

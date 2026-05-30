@@ -8,6 +8,7 @@ class CheckIn extends Model
 {
     protected $fillable = [
         'user_id',
+        'active_user_id',
         'campus_space_id',
         'checked_in_at',
         'checked_out_at',

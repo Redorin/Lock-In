@@ -180,6 +180,10 @@
         .sp{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border);}
         .empty{text-align:center;padding:48px 20px;color:var(--text-muted);font-size:.875rem;}
         .empty svg{width:36px;height:36px;margin:0 auto 12px;opacity:.2;display:block;}
+        .empty-rich{text-align:center;padding:52px 20px;color:var(--text-muted);}
+        .empty-rich svg{width:42px;height:42px;margin:0 auto 14px;opacity:.25;display:block;color:var(--text-soft);}
+        .empty-rich h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:.98rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+        .empty-rich p{font-size:.84rem;line-height:1.55;max-width:360px;margin:0 auto;}
         .search-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
         .siw{position:relative;flex:1;min-width:160px;}
         .siw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);pointer-events:none;}
@@ -245,8 +249,8 @@
         <div class="admin-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin · {{ auth()->user()->name }}</div>
     </div>
     <div class="desktop-content page-in">
-        @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
-        @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
+        @if(session('success'))<x-alert>{{ session('success') }}</x-alert>@endif
+        @if(session('error'))<x-alert type="error">{{ session('error') }}</x-alert>@endif
         @yield('content')
     </div>
 </div>
@@ -268,8 +272,8 @@
 
 <div class="mobile-content">
     <div class="mob-page-hdr"><h2>@yield('page-title')</h2><p>@yield('page-sub')</p></div>
-    @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
-    @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
+    @if(session('success'))<x-alert>{{ session('success') }}</x-alert>@endif
+    @if(session('error'))<x-alert type="error">{{ session('error') }}</x-alert>@endif
     @yield('content')
 </div>
 
@@ -336,8 +340,8 @@ setInterval(()=>{rem--;if(rem<=60&&!warned){warned=true;sc();}if(rem<=0)(documen
     <form method="POST" id="gdelForm">
         @csrf @method('DELETE')
         <div class="modal-actions">
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-            <button type="button" class="btn btn-ghost" onclick="document.getElementById('globalDeleteModal').classList.remove('open')">Cancel</button>
+            <x-button type="submit" variant="danger">Yes, Delete</x-button>
+            <x-button onclick="document.getElementById('globalDeleteModal').classList.remove('open')">Cancel</x-button>
         </div>
     </form>
 </div></div>

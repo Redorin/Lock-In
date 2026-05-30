@@ -82,12 +82,21 @@
 
         .time-box {
             background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 16px; padding: 20px; display: flex; justify-content: space-around;
+            border-radius: 16px; padding: 20px; display: grid; grid-template-columns: repeat(2,1fr);
+            gap: 14px;
             margin-bottom: 32px;
         }
         .time-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .time-label { font-size: .75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         .time-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+        .countdown-box {
+            background: var(--accent-bg); border: 1px solid rgba(59,130,246,.22);
+            border-radius: 18px; padding: 18px;
+            margin-bottom: 24px; text-align: center;
+        }
+        .countdown-label { font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px; }
+        .countdown-val { font-family:'Plus Jakarta Sans',sans-serif;font-size:2rem;font-weight:800;color:var(--text);letter-spacing:-.5px; }
+        .countdown-sub { font-size:.8rem;color:var(--text-soft);margin-top:4px; }
 
         .btn-checkout {
             width: 100%; padding: 18px; border-radius: 99px; border: none;
@@ -99,6 +108,7 @@
         }
         .btn-checkout:hover { background: var(--danger); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(248,113,113,.3); }
         .btn-checkout svg { width: 20px; height: 20px; }
+        .checkout-form { margin:0; }
         
         .alert {
             background: var(--success-bg); border: 1px solid rgba(74,222,128,.2);
@@ -107,6 +117,16 @@
             animation: slideDown .4s var(--ease);
         }
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+        @media(max-width:640px) {
+            body { justify-content:flex-start; padding:24px 16px 120px; }
+            .focus-card { padding:36px 22px; border-radius:26px; }
+            .time-box { grid-template-columns:1fr; }
+            .checkout-form {
+                position:fixed; left:16px; right:16px; bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+                z-index:20;
+            }
+            .checkout-form .btn-checkout { box-shadow:0 12px 34px rgba(248,113,113,.28); }
+        }
     </style>
 </head>
 <body>
@@ -140,12 +160,22 @@
                 <span class="time-val">{{ $activeCheckIn->checked_in_at->format('g:i A') }}</span>
             </div>
             <div class="time-item">
+                <span class="time-label">Duration</span>
+                <span class="time-val" id="durationVal">--</span>
+            </div>
+            <div class="time-item">
                 <span class="time-label">Auto-Checkout</span>
                 <span class="time-val">{{ $activeCheckIn->checked_in_at->copy()->addHours(2)->format('g:i A') }}</span>
             </div>
         </div>
 
-        <form method="POST" action="{{ route('checkin.checkout') }}">
+        <div class="countdown-box">
+            <div class="countdown-label">Auto-checkout in</div>
+            <div class="countdown-val" id="countdownVal">--</div>
+            <div class="countdown-sub">You will be checked out automatically after 2 hours.</div>
+        </div>
+
+        <form method="POST" action="{{ route('checkin.checkout') }}" class="checkout-form">
             @csrf
             <button type="submit" class="btn-checkout">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -157,5 +187,28 @@
             </button>
         </form>
     </div>
+    <script>
+        const checkedInAt = new Date(@json($activeCheckIn->checked_in_at->toIso8601String()));
+        const checkoutAt = new Date(checkedInAt.getTime() + (2 * 60 * 60 * 1000));
+
+        function formatDuration(ms) {
+            const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m ${seconds}s`;
+        }
+
+        function tickFocusTimers() {
+            const now = new Date();
+            document.getElementById('durationVal').textContent = formatDuration(now - checkedInAt);
+            document.getElementById('countdownVal').textContent = formatDuration(checkoutAt - now);
+        }
+
+        tickFocusTimers();
+        setInterval(tickFocusTimers, 1000);
+    </script>
 </body>
 </html>

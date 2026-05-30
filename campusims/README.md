@@ -1,59 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UDDSafeSpaces
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+UDDSafeSpaces is a Laravel application for campus space occupancy, student verification, QR check-ins, auto-checkout, and admin monitoring.
 
-## About Laravel
+## Local Development
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Install dependencies and build frontend assets:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+composer install
+npm install
+npm run build
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Prepare the app:
 
-## Learning Laravel
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Useful checks:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+php artisan test
+php artisan view:cache
+php artisan view:clear
+```
 
-## Laravel Sponsors
+## Production Environment
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Do not commit your real `.env`. Use these values as the production baseline:
 
-### Premium Partners
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-domain.example.com
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+SESSION_DRIVER=database
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+CACHE_STORE=database
+QUEUE_CONNECTION=database
 
-## Contributing
+TRUSTED_PROXIES=REMOTE_ADDR
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Use `TRUSTED_PROXIES=REMOTE_ADDR` when the app is behind Cloudflare Tunnel or a reverse proxy you control. Laravel will trust forwarded HTTPS, host, port, prefix, and client IP headers from the proxy that connects to the app.
 
-## Code of Conduct
+After changing production environment values, clear and rebuild cached config:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
 
-## Security Vulnerabilities
+## Cloudflare Tunnel
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+For a quick test tunnel to a local HTTPS app on port `8443`:
 
-## License
+```bash
+docker run --rm -it \
+  --name campusims-tunnel \
+  --dns 1.1.1.1 \
+  --dns 8.8.8.8 \
+  --add-host=host.docker.internal:host-gateway \
+  cloudflare/cloudflared:latest tunnel \
+  --no-autoupdate \
+  --no-tls-verify \
+  --url https://host.docker.internal:8443
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+For a real deployment, use a named Cloudflare Tunnel tied to your Cloudflare account and set `APP_URL` to the public HTTPS domain.
+
+## Scheduler
+
+The app schedules automatic checkout every 30 minutes in `bootstrap/app.php`.
+
+With Docker Compose, the `scheduler` service runs `php artisan schedule:run` once per minute:
+
+```bash
+docker compose up -d scheduler
+docker compose logs -f scheduler
+```
+
+Run Laravel's scheduler every minute on the production host:
+
+```cron
+* * * * * cd /path/to/campusims && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Useful scheduled/manual commands:
+
+```bash
+php artisan checkins:auto-checkout
+php artisan spaces:repair-occupancy --dry-run
+php artisan spaces:repair-occupancy
+```
+
+`spaces:repair-occupancy` recalculates each space's `current_occupancy` from active check-ins.
+
+## Queue Worker
+
+The Compose file includes a `queue` service for database-backed queued jobs:
+
+```bash
+docker compose up -d queue
+docker compose logs -f queue
+```
+
+If queued jobs are not being used yet, it is still safe to leave the worker running.
+
+## Database Backups
+
+Create a MySQL backup:
+
+```bash
+mysqldump -u USER -p DATABASE_NAME > backups/campusims-$(date +%F-%H%M).sql
+```
+
+Restore a backup:
+
+```bash
+mysql -u USER -p DATABASE_NAME < backups/campusims-YYYY-MM-DD-HHMM.sql
+```
+
+For production, store backups outside the app directory, restrict permissions, and periodically test restore on a separate database.

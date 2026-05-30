@@ -45,6 +45,21 @@
     .search-clear.show { display: flex; }
     .search-clear:hover { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
     .search-clear svg { width: 15px; height: 15px; }
+    .building-filters {
+        display:flex; gap:8px; flex-wrap:wrap;
+        margin:-18px 0 28px;
+    }
+    .building-filter {
+        padding:8px 13px; border-radius:999px;
+        border:1px solid var(--border2); background:var(--surface2);
+        color:var(--text-soft); font-family:'Plus Jakarta Sans',sans-serif;
+        font-size:.76rem; font-weight:800; cursor:pointer;
+        transition:all var(--t) var(--ease);
+    }
+    .building-filter:hover,
+    .building-filter.active {
+        background:var(--accent-bg); color:var(--accent2); border-color:var(--accent-border);
+    }
 
     /* ── Nexus Dashboard Cards Concept ── */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 32px; align-items: flex-start; }
@@ -114,10 +129,11 @@
     .sbody { flex: 1; }
     .sname { font-family: 'Plus Jakarta Sans', sans-serif; font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
     .scnt { font-size: .8rem; font-weight: 500; color: var(--text-soft); }
+    .scnt strong { color:var(--text); font-weight:800; }
     
     .sc-right { display: flex; align-items: center; gap: 24px; min-width: 140px; justify-content: flex-end; }
     
-    .badge { font-size: .7rem; font-weight: 700; letter-spacing: .02em; padding: 4px 10px; border-radius: 99px; }
+    .badge { font-size: .7rem; font-weight: 700; letter-spacing: .02em; padding: 4px 10px; border-radius: 99px; white-space:nowrap; }
     .bl { background: var(--accent-bg); color: var(--accent2); border: 1px solid var(--accent-border); }
     .bm { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
     .bh { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
@@ -129,6 +145,12 @@
     .pfm { background: linear-gradient(90deg, var(--warn), #f59e0b); box-shadow: 0 0 10px rgba(251,191,36,.4); }
     .pfh { background: linear-gradient(90deg, var(--danger), #f87171); box-shadow: 0 0 10px rgba(248,113,113,.4); }
     .pff { background: var(--danger); }
+    .card-action {
+        display:inline-flex; align-items:center; gap:6px;
+        font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800;
+        color:var(--accent2);
+    }
+    .card-action svg { width:13px; height:13px; }
 
     /* No results */
     .no-results {
@@ -298,42 +320,28 @@
     </button>
 </div>
 
+<div class="building-filters" id="buildingFilters">
+    <button type="button" class="building-filter active" data-building-filter="all" onclick="setBuildingFilter('all')">All</button>
+    @foreach($grouped->keys() as $building)
+        <button type="button" class="building-filter" data-building-filter="{{ strtolower($building) }}" onclick="setBuildingFilter('{{ strtolower($building) }}')">{{ $building }}</button>
+    @endforeach
+</div>
+
 <div class="dashboard-grid">
     {{-- Top Left Layout: Huge Stat Cards --}}
     <div class="stats">
         {{-- Hero Stat --}}
-        <div class="stat stat-main">
-            <div class="stat-top-row">
-                <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-                <div class="stat-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
-            </div>
-            <div>
-                <div class="stat-lbl">Total Spaces</div>
-                <div class="stat-val">{{ $total }}</div>
-            </div>
-        </div>
+        <x-stat-card variant="student" label="Total Spaces" :value="$total" main>
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></x-slot:icon>
+        </x-stat-card>
         
-        <div class="stat">
-            <div class="stat-top-row">
-                <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <div class="stat-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
-            </div>
-            <div>
-                <div class="stat-lbl">Available Now</div>
-                <div class="stat-val" style="color:var(--success);">{{ $low }}</div>
-            </div>
-        </div>
+        <x-stat-card variant="student" label="Available Now" :value="$low" value-color="var(--success)">
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></x-slot:icon>
+        </x-stat-card>
         
-        <div class="stat">
-            <div class="stat-top-row">
-                <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                <div class="stat-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
-            </div>
-            <div>
-                <div class="stat-lbl">Crowded Spaces</div>
-                <div class="stat-val" style="color:var(--danger);">{{ $crowd }}</div>
-            </div>
-        </div>
+        <x-stat-card variant="student" label="Crowded Spaces" :value="$crowd" value-color="var(--danger)">
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></x-slot:icon>
+        </x-stat-card>
     </div>
 
     {{-- Top Right Area: Spaces list --}}
@@ -361,6 +369,8 @@
                     $st = strtolower($space->status);
                     $bc = $st==='low' ? 'bl' : ($st==='moderate' ? 'bm' : ($st==='high' ? 'bh' : 'bf'));
                     $pc = $st==='low' ? 'pfl' : ($st==='moderate' ? 'pfm' : ($st==='high' ? 'pfh' : 'pff'));
+                    $available = max(0, $space->capacity - $space->current_occupancy);
+                    $label = $space->status === 'FULL' ? 'Full' : (in_array($space->status, ['HIGH', 'MODERATE']) ? 'Busy' : 'Available');
                 @endphp
                 <div class="sc"
                      style="animation-delay:{{ min($i * .06, .5) }}s"
@@ -372,8 +382,10 @@
                          building: '{{ addslashes($space->building) }}',
                          occupancy: {{ $space->current_occupancy }},
                          capacity: {{ $space->capacity }},
+                         available: {{ $available }},
                          percent: {{ $space->occupancy_percent }},
                          status: '{{ $space->status }}',
+                         label: '{{ $label }}',
                          bc: '{{ $bc }}',
                          pc: '{{ $pc }}'
                      })">
@@ -386,19 +398,25 @@
                         </div>
                         <div class="sbody">
                             <div class="sname">{{ $space->name }}</div>
-                            <div class="scnt">{{ $space->current_occupancy }} / {{ $space->capacity }}</div>
+                            <div class="scnt"><strong>{{ $available }}</strong> available slots</div>
                         </div>
                     </div>
                     <div class="sc-right">
                         <div class="pt"><div class="pf {{ $pc }}" style="width:{{ $space->occupancy_percent }}%"></div></div>
-                        <span class="badge {{ $bc }}">{{ $space->status }}</span>
+                        <span class="badge {{ $bc }}">{{ $label }}</span>
+                        <span class="card-action">
+                            Details
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        </span>
                     </div>
                 </div>
                 @endforeach
             </div>
         </div>
         @empty
-        <div style="text-align:center;padding:60px;color:var(--text-muted);">No campus spaces found.</div>
+        <x-empty-state title="No campus spaces found" message="Ask an admin to add campus spaces before students start checking in.">
+            <x-slot:icon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></x-slot:icon>
+        </x-empty-state>
         @endforelse
         </div>
     </div>
@@ -461,7 +479,7 @@
             </div>
             <div class="sm-info-row">
                 <div class="sm-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <span class="sm-info-text">QR codes refresh daily at <strong>midnight</strong></span>
+                <span class="sm-info-text">QR codes refresh every <strong>15 minutes</strong></span>
             </div>
             <div class="sm-info-row">
                 <div class="sm-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
@@ -505,6 +523,8 @@
 const activeCheckIn = @json($activeCheckIn ? ['space_id' => $activeCheckIn->campus_space_id, 'space_name' => $activeCheckIn->space->name, 'checked_in_at' => $activeCheckIn->checked_in_at->format('g:i A')] : null);
 
 // ── Search ────────────────────────────────────────────────────────────────────
+let activeBuildingFilter = 'all';
+
 function handleSearch(val) {
     const q = val.trim().toLowerCase();
     const sections = document.querySelectorAll('.bsect');
@@ -515,10 +535,12 @@ function handleSearch(val) {
     sections.forEach(section => {
         const cards = section.querySelectorAll('.sc');
         let sectionHasMatch = false;
+        const buildingAllowed = activeBuildingFilter === 'all' || section.dataset.building === activeBuildingFilter;
         cards.forEach(card => {
             const name = card.dataset.name || '';
             const building = card.dataset.building || '';
-            const match = !q || name.includes(q) || building.includes(q);
+            const textMatch = !q || name.includes(q) || building.includes(q);
+            const match = buildingAllowed && textMatch;
             card.style.display = match ? '' : 'none';
             if (match) sectionHasMatch = true;
         });
@@ -536,6 +558,14 @@ function clearSearch() {
     inp.focus();
 }
 
+function setBuildingFilter(building) {
+    activeBuildingFilter = building;
+    document.querySelectorAll('.building-filter').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.buildingFilter === building);
+    });
+    handleSearch(document.getElementById('spaceSearch').value);
+}
+
 // ── Space modal ───────────────────────────────────────────────────────────────
 let currentSpaceId = null;
 
@@ -549,7 +579,7 @@ function openSpace(space) {
 
     // Badge
     const badge = document.getElementById('smBadge');
-    badge.textContent = space.status;
+    badge.textContent = space.label;
     badge.className = 'sm-hero-badge badge ' + space.bc;
 
     // Text
@@ -558,7 +588,7 @@ function openSpace(space) {
     document.getElementById('smOccNum').textContent = `${space.occupancy} / ${space.capacity} (${space.percent}%)`;
     document.getElementById('smCurrent').textContent = space.occupancy;
     document.getElementById('smCapacity').textContent = space.capacity;
-    document.getElementById('smAvail').textContent = Math.max(0, space.capacity - space.occupancy);
+    document.getElementById('smAvail').textContent = space.available;
     document.getElementById('smInfoBuilding').textContent = space.building;
 
     // Bar

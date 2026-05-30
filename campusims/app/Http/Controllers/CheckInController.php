@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CampusSpace;
 use App\Models\CheckIn;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,9 +44,11 @@ class CheckInController extends \Illuminate\Routing\Controller
 
         // Validate token
         if (!$spaceId || !$token || !CampusSpace::validateToken((int)$spaceId, $token)) {
+            ActivityLog::log('failed Check-In', 'Invalid or expired QR token scanned.', 'QR scan');
+
             return view('student.checkin-result', [
                 'success' => false,
-                'message' => 'Invalid or expired QR code. QR codes reset daily at midnight.',
+                'message' => 'Invalid or expired QR code. QR codes refresh every 15 minutes.',
                 'space'   => null,
             ]);
         }
@@ -60,7 +63,7 @@ class CheckInController extends \Illuminate\Routing\Controller
                     'type' => 'error',
                     'view' => [
                         'success' => false,
-                        'message' => 'Invalid or expired QR code. QR codes reset daily at midnight.',
+                        'message' => 'Invalid or expired QR code. QR codes refresh every 15 minutes.',
                         'space'   => null,
                     ],
                 ];
@@ -73,6 +76,8 @@ class CheckInController extends \Illuminate\Routing\Controller
                 ->first();
 
             if ($existing) {
+                ActivityLog::log('duplicate Check-In', "Already checked into {$space->building} - {$space->name}.", $space->name);
+
                 return [
                     'type' => 'error',
                     'view' => [
@@ -86,6 +91,8 @@ class CheckInController extends \Illuminate\Routing\Controller
             }
 
             if ($space->current_occupancy >= $space->capacity) {
+                ActivityLog::log('failed Check-In', "Attempted check-in to full space: {$space->building} - {$space->name}.", $space->name);
+
                 return [
                     'type' => 'error',
                     'view' => [
@@ -104,17 +111,22 @@ class CheckInController extends \Illuminate\Routing\Controller
                 ->first();
 
             if ($prevCheckIn) {
-                $prevCheckIn->update(['checked_out_at' => now()]);
+                $prevCheckIn->update([
+                    'checked_out_at' => now(),
+                    'active_user_id' => null,
+                ]);
                 $this->decrementOccupancy($prevCheckIn->space);
             }
 
             CheckIn::create([
                 'user_id'         => $user->id,
+                'active_user_id'  => $user->id,
                 'campus_space_id' => $space->id,
                 'checked_in_at'   => now(),
             ]);
 
             $space->increment('current_occupancy');
+            ActivityLog::log('checked In', "Checked into {$space->building} - {$space->name}.", $space->name);
 
             return [
                 'type' => 'success',
@@ -144,8 +156,12 @@ class CheckInController extends \Illuminate\Routing\Controller
                 return null;
             }
 
-            $checkIn->update(['checked_out_at' => now()]);
+            $checkIn->update([
+                'checked_out_at' => now(),
+                'active_user_id' => null,
+            ]);
             $this->decrementOccupancy($checkIn->space);
+            ActivityLog::log('checked Out', "Checked out of {$checkIn->space->building} - {$checkIn->space->name}.", $checkIn->space->name);
 
             return $checkIn->space;
         });

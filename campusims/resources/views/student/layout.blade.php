@@ -255,6 +255,15 @@
             100% { box-shadow:0 0 0 0 transparent; }
         }
         .desktop-content { padding:20px 32px 48px; }
+        .page-hdr { margin-bottom:24px; }
+        .page-hdr h1 {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            font-size:1.8rem;
+            font-weight:800;
+            letter-spacing:-.5px;
+            color:var(--text);
+        }
+        .page-hdr p { font-size:.9rem;color:var(--text-soft);margin-top:2px; }
 
         /* ═══════════════════════════════════════════
            MOBILE
@@ -298,11 +307,6 @@
             display:flex;align-items:center;justify-content:center;
             font-size:.6rem;font-weight:800;color:#fff;
         }
-
-        .mobile-content { display:none;padding:16px 16px 90px;position:relative;z-index:1; }
-        .mob-page-hdr { margin-bottom:20px; }
-        .mob-page-hdr h2 { font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-.4px;color:var(--text); }
-        .mob-page-hdr p { font-size:.8rem;color:var(--text-soft);margin-top:3px; }
 
         /* ═══════════════════════════════════════════
            BOTTOM TAB BAR
@@ -463,6 +467,10 @@
         .alert svg { width:16px;height:16px;flex-shrink:0; }
         .alert-success { background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-border); }
         .alert-danger  { background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border); }
+        .empty-rich{text-align:center;padding:52px 20px;color:var(--text-muted);}
+        .empty-rich svg{width:42px;height:42px;margin:0 auto 14px;opacity:.25;display:block;color:var(--text-soft);}
+        .empty-rich h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:.98rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+        .empty-rich p{font-size:.84rem;line-height:1.55;max-width:360px;margin:0 auto;}
 
         /* Fields */
         .field { margin-bottom:16px; }
@@ -581,14 +589,18 @@
            BREAKPOINTS
         ═══════════════════════════════════════════ */
         @media(min-width:900px) {
-            .mobile-topbar,.mobile-content,.drawer,.drawer-overlay,.mob-tabbar { display:none!important; }
+            .mobile-topbar,.drawer,.drawer-overlay,.mob-tabbar { display:none!important; }
             .desktop-sidebar { display:flex; }
             .desktop-main { display:block; }
         }
         @media(max-width:899px) {
-            .desktop-sidebar,.desktop-main { display:none!important; }
+            .desktop-sidebar,.desktop-topbar { display:none!important; }
+            .desktop-main { display:block;margin-left:0;min-height:100vh; }
+            .desktop-content { padding:16px 16px 90px; }
+            .page-hdr { margin-bottom:20px; }
+            .page-hdr h1 { font-size:1.4rem;letter-spacing:-.4px; }
+            .page-hdr p { font-size:.8rem;margin-top:3px; }
             .mobile-topbar { display:flex; }
-            .mobile-content { display:block; }
             .mob-tabbar { display:block; }
         }
     </style>
@@ -631,7 +643,7 @@
     </div>
 </aside>
 
-{{-- DESKTOP MAIN --}}
+{{-- MAIN CONTENT --}}
 <div class="desktop-main">
     <div class="desktop-topbar">
         <!-- Replaced standard static title with isolated Search approach in next view -->
@@ -643,12 +655,12 @@
         </div>
     </div>
     <div class="desktop-content page-in">
-        <div style="margin-bottom: 24px;">
-            <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-.5px;color:var(--text);">@yield('page-title')</h1>
-            <p style="font-size:.9rem;color:var(--text-soft);margin-top:2px;">@yield('page-sub')</p>
+        <div class="page-hdr">
+            <h1>@yield('page-title')</h1>
+            <p>@yield('page-sub')</p>
         </div>
-        @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
-        @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
+        @if(session('success'))<x-alert>{{ session('success') }}</x-alert>@endif
+        @if(session('error'))<x-alert type="error">{{ session('error') }}</x-alert>@endif
         @yield('content')
     </div>
 </div>
@@ -671,14 +683,6 @@
             <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
     </div>
-</div>
-
-{{-- MOBILE CONTENT --}}
-<div class="mobile-content">
-    <div class="mob-page-hdr"><h2>@yield('page-title')</h2><p>@yield('page-sub')</p></div>
-    @if(session('success'))<div class="alert alert-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>{{ session('success') }}</div>@endif
-    @if(session('error'))<div class="alert alert-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ session('error') }}</div>@endif
-    @yield('content')
 </div>
 
 {{-- MOBILE BOTTOM TAB BAR --}}

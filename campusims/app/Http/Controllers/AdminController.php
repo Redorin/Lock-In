@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\CampusSpace;
 use App\Models\ActivityLog;
+use App\Models\CheckIn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,7 +35,20 @@ class AdminController extends \Illuminate\Routing\Controller
             'pending_count'     => User::where('status', 'pending')->count(),
         ];
         $spaces = CampusSpace::orderBy('building')->orderBy('name')->get();
-        return view('admin.dashboard', compact('stats', 'spaces'));
+        $activeCheckIns = CheckIn::with(['user', 'space'])
+            ->whereNull('checked_out_at')
+            ->latest('checked_in_at')
+            ->limit(8)
+            ->get();
+
+        $quickFilters = [
+            'full_spaces' => $spaces->filter(fn ($space) => $space->capacity > 0 && $space->current_occupancy >= $space->capacity)->count(),
+            'high_occupancy' => $spaces->filter(fn ($space) => $space->status === 'HIGH')->count(),
+            'inactive_users' => User::where('role', 'student')->where('status', 'approved')->where('is_active', false)->count(),
+            'pending_verifications' => $stats['pending_count'],
+        ];
+
+        return view('admin.dashboard', compact('stats', 'spaces', 'activeCheckIns', 'quickFilters'));
     }
 
     // ══ Spaces ════════════════════════════════════════════════════════════════
@@ -51,6 +65,16 @@ class AdminController extends \Illuminate\Routing\Controller
         }
         if ($request->filled('building')) {
             $query->where('building', $request->building);
+        }
+        if ($request->filled('status')) {
+            if ($request->status === 'full') {
+                $query->where('capacity', '>', 0)
+                    ->whereColumn('current_occupancy', '>=', 'capacity');
+            } elseif ($request->status === 'high') {
+                $query->where('capacity', '>', 0)
+                    ->whereColumn('current_occupancy', '<', 'capacity')
+                    ->whereRaw('(current_occupancy / capacity) >= ?', [0.75]);
+            }
         }
         $spaces   = $query->orderBy('building')->orderBy('name')->get();
         $buildings = CampusSpace::distinct()->pluck('building');

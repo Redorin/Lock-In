@@ -6,6 +6,7 @@ use App\Models\CampusSpace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class StudentDashboardController extends \Illuminate\Routing\Controller
 {
@@ -75,8 +76,8 @@ class StudentDashboardController extends \Illuminate\Routing\Controller
             'id_image.max'      => 'Image must be under 10MB.',
         ]);
 
-        $imageName = time() . '_' . $request->file('id_image')->getClientOriginalName();
-        $request->file('id_image')->storeAs('id_images', $imageName, 'public');
+        $oldImage = $user->id_image;
+        $imageName = basename($request->file('id_image')->store('id_images', 'public'));
 
         $user->name = $data['name'];
         $user->student_id = $data['student_id'];
@@ -84,6 +85,10 @@ class StudentDashboardController extends \Illuminate\Routing\Controller
         $user->status = 'pending';
         $user->rejection_reason = null;
         $user->save();
+
+        if ($oldImage) {
+            Storage::disk('public')->delete('id_images/' . $oldImage);
+        }
 
         Auth::logout();
         $request->session()->invalidate();
