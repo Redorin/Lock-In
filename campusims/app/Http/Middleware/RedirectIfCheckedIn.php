@@ -27,6 +27,7 @@ class RedirectIfCheckedIn
                 // If they are checked in, they can ONLY visit these routes:
                 $allowedRoutes = [
                     'student.checked-in',
+                    'checkin.scan',
                     'checkin.checkout',
                     'logout'
                 ];

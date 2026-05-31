@@ -21,7 +21,7 @@ class ActivityLog extends Model
     /**
      * Helper to quickly log an action
      */
-    public static function log(string $action, string $description, string $subjectName = null, ?int $userId = null): void
+    public static function log(string $action, string $description, ?string $subjectName = null, ?int $userId = null): void
     {
         static::create([
             'user_id'      => $userId ?? auth()->id(),
